@@ -40,6 +40,7 @@ if [[ $REPLY =~ ^[Ss]$ ]]; then
 	echo "Apagando as pastas e re-iniciando as análises..."
 	[[ ! -d "${RESULTSDIR}" ]] || mkdir -vp ${RESULTSDIR} && rm -r "${RESULTSDIR}"; mkdir -vp "${RESULTSDIR}"
 fi
+IODIR=$RAWDIR              
 FASTQCDIR="${RESULTSDIR}/FASTQC"
 TRIMMOMATICDIR="${RESULTSDIR}/TRIMMOMATIC"
 MUSKETDIR="${RESULTSDIR}/MUSKET"
@@ -53,25 +54,28 @@ THREADS="$(lscpu | grep 'CPU(s):' | awk '{print $2}' | sed -n '1p')"
 function qc_bper () {
 	if [ ! -d $FASTQCDIR ]; then
 		mkdir -vp $FASTQCDIR
-		echo -e "Executando fastqc em ${RAWDIR}...\n"
-		fastqc --noextract --nogroup -o ${FASTQCDIR} ${RAWDIR}/*.fastq.gz
-	# for file in ${RAWDIR}; do
-	#		zcat file | fastqc -o ${FASTQCDIR} 
-    	#	done
+		echo -e "Executando fastqc em ${IODIR}...\n"
+		fastqc --noextract --nogroup -o ${FASTQCDIR} ${IODIR}/*.fastq.gz
 	else
-		echo "Reanalisando os dados..."
+		echo "Dados analisados previamente..."
 	fi
-    IODIR=$FASTQCDIR
 }
 
 
 # Quality control filter using Trimmomatic
 function trim_bper () {
-  # trimmomatic PE "${IODIR}/SRR2589044_1.fastq.gz" ${IODIR}/SRR2589044_2.fastq.gz" \
-                  SRR2589044_1.trim.fastq.gz SRR2589044_1un.trim.fastq.gz \
-                  SRR2589044_2.trim.fastq.gz SRR2589044_2un.trim.fastq.gz \
-                  SLIDINGWINDOW:4:20 MINLEN:25 ILLUMINACLIP:NexteraPE-PE.fa:2:40:15
-  IODIR=$TRIMMOMATICDIR              
+	conda activate trimmomatic
+	if [ ! -d $TRIMMOMATICDIR ]; then
+		mkdir -vp $TRIMMOMATICDIR
+		echo -e "Executando trimmomatic em ${IODIR}...\n"
+		trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/trimlog.txt \
+				-summary ${TRIMMOMATICDIR}/summary.txt \
+				${IODIR}/*.fastq.gz \
+				SLIDINGWINDOW:4:20 MINLEN:35
+	else
+		echo "Dados analisados previamente..."
+	fi
+  	IODIR=$TRIMMOMATICDIR              
 }
 
 # 3) Assembly das reads
@@ -88,7 +92,7 @@ function trim_bper () {
 # Define as etapas de cada workflow
 # Etapas obrigatórios: basecalling, demux/primer_removal ou demux_headcrop, reads_polishing e algum método de classificação taxonômica
 workflowList=(
-	'qc_bper'
+	'qc_bper trim_bper'
 )
 
 # Validação do WF
