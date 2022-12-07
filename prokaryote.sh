@@ -56,7 +56,10 @@ function qc_bper () {
 		echo -e "Executando fastqc em ${RAWDIR}...\n"
 		for file in ${RAWDIR}; do
 			fastqc -o ${FASTQCDIR} -f $file 
-    done    
+    		done
+	else
+		echo "Reanalisando os dados..."
+	fi
     IODIR=$FASTQCDIR
 }
 
