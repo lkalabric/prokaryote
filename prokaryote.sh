@@ -54,9 +54,10 @@ function qc_bper () {
 	if [ ! -d $FASTQCDIR ]; then
 		mkdir -vp $FASTQCDIR
 		echo -e "Executando fastqc em ${RAWDIR}...\n"
-		for file in ${RAWDIR}; do
-			zcat file | fastqc -o ${FASTQCDIR} 
-    		done
+		fastqc --noextract --nogroup -o ${FASTQCDIR} "${RAWDIR}/*.fastq.gz
+	# for file in ${RAWDIR}; do
+	#		zcat file | fastqc -o ${FASTQCDIR} 
+    	#	done
 	else
 		echo "Reanalisando os dados..."
 	fi
