@@ -55,7 +55,7 @@ function qc_bper () {
 		mkdir -vp $FASTQCDIR
 		echo -e "Executando fastqc em ${RAWDIR}...\n"
 		for file in ${RAWDIR}; do
-			fastqc -o ${FASTQCDIR} -f $file 
+			zcat file | fastqc -o ${FASTQCDIR} 
     		done
 	else
 		echo "Reanalisando os dados..."
@@ -99,7 +99,7 @@ fi
 indice=$(expr $WF - 1)
 
 # Execução das análises propriamente ditas a partir do workflow selecionado
-echo "Executando o workflow WF$WF..."
+echo -e "\nExecutando o workflow WF$WF..."
 echo "Passos do WF$WF: ${workflowList[$indice]}"
 # Separa cada etapa do workflow no vetor steps
 read -r -a steps <<< "${workflowList[$indice]}"
