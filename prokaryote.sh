@@ -5,7 +5,7 @@
 # Autor: Luciano Kalabric & Viviane Ferreira
 # Objetivo: Análise das sequencias, filtro de qualidade, correção das reads e montagem de novo
 # Controle de versão: Incluir o log das próximas atualizações aqui
-# Versão 1.0 de 07 DEZ 2022 - Programa inicial
+# Versão 1.0 de 07 DEZ 2022 - Programa inicial revisado
 
 # Entrada de dados
 LIBNAME=$1
