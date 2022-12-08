@@ -128,6 +128,7 @@ function flash_bper () {
 		echo -e "Executando flash em ${IODIR}...\n"
 		flash ${IODIR}/${LIBNAME}*.fastq \
 			-t ${THREADS} -o ${LIBNAME} -d ${FLASHDIR} 2>&1 | tee ${FLASHDIR}/${LIBNAME}_flash.log	
+		mv ${FLASHDIR}/${LIBNAME}.extendedFlags.fastq ${FLASHDIR}/${LIBNAME}.fastq
 		mv ${FLASHDIR}/${LIBNAME}.notCombined*.fastq ${FLASHDIR}/${LIBNAME}.notCombined*.fastnq
 	else
 		echo "Dados analisados previamente..."
@@ -157,7 +158,7 @@ function spades_bper () {
 	if [ ! -d $SPADESDIR ]; then
 		mkdir -vp $SPADESDIR
 		echo -e "Executando spades em ${IODIR}...\n"
-		spapes -1 "${IODIR}/1E1_S1_L001_R1_001.fastq.gz" -2 "${IODIR}/1E1_S1_L001_R2_001.fastq.gz" \
+		spapes -1 ${IODIR}/${LIBNAME}.fastq \
 			--only-assembler --careful -o assembly-analysis
 	else
 		echo "Dados analisados previamente..."
@@ -165,15 +166,10 @@ function spades_bper () {
  		IODIR=$KHMERDIR              
 }
 
+#
+# Main do script
+#
 
-
-
-# 3) Assembly das reads
-
-# 4) Assembly das contigs
-
-# 5\
-	) Visualização da montagem
 # Define as etapas de cada workflow
 # Etapas obrigatórios: basecalling, demux/primer_removal ou demux_headcrop, reads_polishing e algum método de classificação taxonômica
 workflowList=(
