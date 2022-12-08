@@ -68,10 +68,17 @@ function trim_bper () {
 	if [ ! -d $TRIMMOMATICDIR ]; then
 		mkdir -vp $TRIMMOMATICDIR
 		echo -e "Executando trimmomatic em ${IODIR}...\n"
-		trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/trimlog.txt \
-				-summary ${TRIMMOMATICDIR}/summary.txt \
-				${IODIR}/*.fastq.gz \
-				SLIDINGWINDOW:4:20 MINLEN:35
+		for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename {} \; | sort); do
+			FULLNAME[@]=$FILE
+			echo $FULLNAME[@]
+			SHORTFILENAME[@]=$(echo $FILE | cut -d "_" -f 3-5 | cut -d "." -f 1)
+			echo $SHORTFILENAME[@]
+		done
+			echo $SHORTFILENAME
+		#	trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${SHORTFILENAME}_trimlog.txt \
+		#			-summary ${TRIMMOMATICDIR}/${SHORTFILENAME}_summary.txt \
+		#			-f $file \
+		#			SLIDINGWINDOW:4:20 MINLEN:35
 	else
 		echo "Dados analisados previamente..."
 	fi
