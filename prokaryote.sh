@@ -64,6 +64,7 @@ TEMPDIR="${RESULTSDIR}/TEMP"
 TRIMMOMATICDIR="${RESULTSDIR}/TRIMMOMATIC"
 MUSKETDIR="${RESULTSDIR}/MUSKET"
 FLASHDIR="${RESULTSDIR}/FLASH"
+KHMERDIR="${RESULTSDIR}/KHMER"
 SPADESDIR="${RESULTSDIR}/SPADES"
 
 # Parâmetro de otimização das análises
@@ -129,7 +130,8 @@ function flash_bper () {
 		flash ${IODIR}/${LIBNAME}*.fastq \
 			-t ${THREADS} -o ${LIBNAME} -d ${FLASHDIR} 2>&1 | tee ${FLASHDIR}/${LIBNAME}_flash.log	
 		mv ${FLASHDIR}/${LIBNAME}.extendedFrags.fastq ${FLASHDIR}/${LIBNAME}.fastq
-		mv ${FLASHDIR}/${LIBNAME}.notCombined*.fastq ${FLASHDIR}/${LIBNAME}.notCombined*.fastnq
+		mv ${FLASHDIR}/${LIBNAME}.notCombined_1.fastq ${FLASHDIR}/${LIBNAME}.notCombined_1.fastnq
+		mv ${FLASHDIR}/${LIBNAME}.notCombined_2.fastq ${FLASHDIR}/${LIBNAME}.notCombined_2.fastnq
 	else
 		echo "Dados analisados previamente..."
 	fi
