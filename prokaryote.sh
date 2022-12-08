@@ -54,9 +54,18 @@ for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename 
 	((INDEX++))
 done
 
+# Validação dos dados
+LIBSUFIX=(echo $LIBNAME | cut -d "_" -f 2)
+SAMPLENAME=(echo $FULLNAME[0] | cut -d "E" -f 1)
+if [[$SAMPLENAME -ne $LIBSUFIX]]; then
+	echo "Você copiou os dados errados para a pasta $LIBNAME!"
+	exit 0
+fi
+
+exit 0
 
 # Parâmetro de otimização das análises
-KMER=21
+KMER=21 # Defaut MAX_KMER_SIZE=28. Se necessário, alterar o Makefile e recompilar
 THREADS="$(lscpu | grep 'CPU(s):' | awk '{print $2}' | sed -n '1p')"
 
 # Quality control report
@@ -124,7 +133,8 @@ function musket_bper () {
 # Define as etapas de cada workflow
 # Etapas obrigatórios: basecalling, demux/primer_removal ou demux_headcrop, reads_polishing e algum método de classificação taxonômica
 workflowList=(
-	'qc_bper trim_bper'
+	'qc_bper trim_bper musket_bper'
+	'qc_bper trim_bper musket_bper'
 )
 
 # Validação do WF
