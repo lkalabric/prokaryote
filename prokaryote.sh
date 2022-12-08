@@ -115,7 +115,7 @@ function musket_bper () {
 			${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
 			-omulti ${MUSKETDIR}/${LIBNAME} -inorder
 		mv ${MUSKETDIR}/${LIBNAME}.0 ${MUSKETDIR}/${LIBNAME}_R1.fastq
-		mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKET*IR}/${LIBNAME}_R2.fastq
+		mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R2.fastq
 	else		echo "Dados analisados previamente..."
 	fi
   	IODIR=$MUSKETDIR              
