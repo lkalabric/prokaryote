@@ -47,16 +47,16 @@ TRIMMOMATICDIR="${RESULTSDIR}/TRIMMOMATIC"
 MUSKETDIR="${RESULTSDIR}/MUSKET"
 SPADESDIR="${RESULTSDIR}/SPADES"
 
-# Lê o nome dos arquivos e cria um nome curto
+# Lê o nome dos arquivos de entreda. O nome curto será o próprio nome da library
 INDEX=0
 for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename {} \; | sort); do
 	FULLNAME[$INDEX]=${FILE}
-	SHORTFILENAME[$INDEX]=$(echo ${FILE} | cut -d "_" -f 3-5 | cut -d "." -f 1)
 	((INDEX++))
 done
 
 
 # Parâmetro de otimização das análises
+KMER=21
 THREADS="$(lscpu | grep 'CPU(s):' | awk '{print $2}' | sed -n '1p')"
 
 # Quality control report
@@ -83,8 +83,8 @@ function trim_bper () {
 		trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${LIBNAME}_trimlog.txt \
 					-summary ${TRIMMOMATICDIR}/${LIBNAME}_summary.txt \
 					${IODIR}/${FULLNAME[0]} ${IODIR}/${FULLNAME[1]} \
-					${TRIMMOMATICDIR}/${SHORTFILENAME[0]}.fastq ${TEMPDIR}/${SHORTFILENAME[0]}_u.fastq \
-					${TRIMMOMATICDIR}/${SHORTFILENAME[1]}.fastq ${TEMPDIR}/${SHORTFILENAME[1]}_u.fastq \
+					${TRIMMOMATICDIR}/${LIBNAME}_R1.fastq ${TEMPDIR}/${LIBNAME}_R1_u.fastq \
+					${TRIMMOMATICDIR}/${LIBNAME}_R2.fastq ${TEMPDIR}/${LIBNAME}_R2_u.fastq \
 					SLIDINGWINDOW:4:20 MINLEN:35
 	else
 		echo "Dados analisados previamente..."
@@ -92,15 +92,14 @@ function trim_bper () {
   	IODIR=$TRIMMOMATICDIR              
 }
 
-# Quality control filter using Trimmomatic
+# Correção de erros
 function musket_bper () {
-	source activate trimmomatic
 	if [ ! -d $MUSKETDIR ]; then
 		mkdir -vp $MUSKETDIR
 		echo -e "Executando musket em ${IODIR}...\n"
-		musket -omutli myout -inorder \
-		${TRIMMOMATICDIR}/${SHORTFILENAME[0]}.fastq ${TRIMMOMATICDIR}/${SHORTFILENAME[1]}.fastq \
-		${MUSKETDIR}/${SHORTFILENAME[0]}.fastq ${MUSKETDIR}/${SHORTFILENAME[1]}.fastq
+		musket -k ${KMER} -p ${THREADS} \
+		${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
+		-o ${LIBNAME}.fastq 
 	else
 		echo "Dados analisados previamente..."
 	fi
