@@ -20,6 +20,16 @@ if [[ $WF > 1 ]]; then
   exit 1
 fi
 
+# Caminhos dos dados de entrada
+RAWDIR="${HOME}/data/${LIBNAME}"
+if [ ! -d $RAWDIR ]; then
+	echo "Erro: Pasta de dados não encontrada!"
+	exit 2
+fi
+IODIR=$RAWDIR
+REFSEQFILENAME="${HOME}/data/REFSEQ/Bper/NZ_CP025371.fasta"
+GENEFILEDIR="${HOME}/data/REFSEQ/Bper/GENE"
+
 # Lê o nome dos arquivos de entreda. O nome curto será o próprio nome da library
 INDEX=0
 for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename {} \; | sort); do
@@ -36,15 +46,6 @@ if [[$SAMPLENAME -ne $LIBSUFIX]]; then
 fi
 exit 4
 
-# Caminhos dos dados de entrada
-RAWDIR="${HOME}/data/${LIBNAME}"
-if [ ! -d $RAWDIR ]; then
-	echo "Erro: Pasta de dados não encontrada!"
-	exit 2
-fi
-REFSEQFILENAME="${HOME}/data/REFSEQ/Bper/NZ_CP025371.fasta"
-GENEFILEDIR="${HOME}/data/REFSEQ/Bper/GENE"
-
 # Configuração das pastas de saída
 echo "Preparando pastas para (re-)análise dos dados..."
 RESULTSDIR="${HOME}/ngs-analysis/${LIBNAME}/wf${WF}"
@@ -56,7 +57,6 @@ if [[ $REPLY =~ ^[Ss]$ ]]; then
 	echo "Apagando as pastas e re-iniciando as análises..."
 	[[ ! -d "${RESULTSDIR}" ]] || mkdir -vp ${RESULTSDIR} && rm -r "${RESULTSDIR}"; mkdir -vp "${RESULTSDIR}"
 fi
-IODIR=$RAWDIR              
 FASTQCDIR="${RESULTSDIR}/FASTQC"
 TEMPDIR="${RESULTSDIR}/TEMP"
 TRIMMOMATICDIR="${RESULTSDIR}/TRIMMOMATIC"
