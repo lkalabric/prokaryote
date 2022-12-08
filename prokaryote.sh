@@ -84,7 +84,7 @@ function trim_bper () {
 					${IODIR}/${FULLNAME[0]} ${IODIR}/${FULLNAME[1]} \
 					${TRIMMOMATICDIR}/${SHORTFILENAME[0]}.fastq ${TEMPDIR}/${SHORTFILENAME[0]}_u.fastq \
 					${TRIMMOMATICDIR}/${SHORTFILENAME[1]}.fastq ${TEMPDIR}/${SHORTFILENAME[1]}_u.fastq \
-					SLIDINGWINDOW:4:20
+					SLIDINGWINDOW:4:20 MINLEN:35
 	else
 		echo "Dados analisados previamente..."
 	fi
