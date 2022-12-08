@@ -122,7 +122,7 @@ function flash_bper () {
 	if [ ! -d $FLASHDIR ]; then
 		mkdir -vp $FLASHDIR
 		echo -e "Executando flash em ${IODIR}...\n"
-		flash ${IODIR}/${LIBNAME}.0 ${IODIR}/${LIBNAME}.1 2>&1 | tee ${FLASHDIR}/${LIBNAME}_flash.log	
+		flash ${IODIR}/${LIBNAME}.0 ${IODIR}/${LIBNAME}.1 -t ${THREADS} -o ${LIBNAME} -d ${FLASHDIR} 2>&1 | tee ${FLASHDIR}/${LIBNAME}_flash.log	
 	else
 		echo "Dados analisados previamente..."
 	fi
