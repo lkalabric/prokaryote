@@ -40,7 +40,7 @@ done
 # Validação dos dados
 LIBSUFIX=$(echo $LIBNAME | cut -d "_" -f 2)
 SAMPLENAME=$(echo $FULLNAME[0] | cut -d "E" -f 1)
-if [[ $SAMPLENAME -ne $LIBSUFIX ]]; then
+if [ $SAMPLENAME -ne $LIBSUFIX ]; then
 	echo "Você copiou os dados errados para a pasta $LIBNAME!"
 	exit 3
 fi
@@ -160,7 +160,7 @@ function spades_bper () {
 		mkdir -vp $SPADESDIR
 		echo -e "Executando spades em ${IODIR}...\n"
 		# Verifica o número de arquivos em ${IODIR}
-		if [[ $(ls ${IODIR}/*.fastq | wc -l) -eq 1]]; then
+		if [ $(ls ${IODIR}/*.fastq | wc -l) -eq 1]; then
 			spapes --merged ${IODIR}/${LIBNAME}.fastq \
 				--only-assembler --careful -o ${SPADESDIR}		
 		else
