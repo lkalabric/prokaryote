@@ -83,7 +83,6 @@ function qc_bper () {
 	fi
 }
 
-
 # Quality control filter using Trimmomatic
 # Link: http://www.usadellab.org/cms/?page=trimmomatic
 function trim_bper () {
@@ -114,6 +113,8 @@ function musket_bper () {
 		musket -k ${KMER} 536870912 -p ${THREADS} \
 			${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
 			-omulti ${MUSKETDIR}/${LIBNAME} -inorder
+		mv ${MUSKETDIR}/${LIBNAME}.0 ${MUSKETDIR}/${LIBNAME}_R1.fastq
+		mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R2.fastq
 	else
 		echo "Dados analisados previamente..."
 	fi
@@ -126,8 +127,9 @@ function flash_bper () {
 	if [ ! -d $FLASHDIR ]; then
 		mkdir -vp $FLASHDIR
 		echo -e "Executando flash em ${IODIR}...\n"
-		flash ${IODIR}/${LIBNAME}.0 ${IODIR}/${LIBNAME}.1 \
+		flash ${IODIR}/${LIBNAME}*.fastq \
 			-t ${THREADS} -o ${LIBNAME} -d ${FLASHDIR} 2>&1 | tee ${FLASHDIR}/${LIBNAME}_flash.log	
+		mv ${FLASHDIR}/${LIBNAME}.notCombined*.fastq ${FLASHDIR}/${LIBNAME}..notCombined*.fastnq
 	else
 		echo "Dados analisados previamente..."
 	fi
@@ -141,7 +143,7 @@ function khmer_bper () {
 		mkdir -vp $KHMERDIR
 		echo -e "Executando khmer em ${IODIR}...\n"
 		khmer mormlalize-by-median --force-single \
-			-s ${IODIR}/${LIBNAME}.extendedFrags.fastq \
+			-s ${IODIR}/${LIBNAME}*.fastq \
 			-R ${KHMERDIR}/${LIBNAME}_report.txt --report-frequency \
 			-o ${KHMERDIR}/${LIBNAME}.fastq
 	else
