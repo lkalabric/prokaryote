@@ -69,10 +69,10 @@ function trim_bper () {
 		mkdir -vp $TRIMMOMATICDIR
 		echo -e "Executando trimmomatic em ${IODIR}...\n"
 		for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename {} \; | sort); do
-			FULLNAME[@]=$FILE
-			echo $FULLNAME[@]
-			SHORTFILENAME[@]=$(echo $FILE | cut -d "_" -f 3-5 | cut -d "." -f 1)
-			echo $SHORTFILENAME[@]
+			FULLNAME[$_]=$FILE
+			echo $FULLNAME[$_]
+			SHORTFILENAME[$_]=$(echo $FILE | cut -d "_" -f 3-5 | cut -d "." -f 1)
+			echo $SHORTFILENAME[$_]
 		done
 			echo $SHORTFILENAME
 		#	trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${SHORTFILENAME}_trimlog.txt \
