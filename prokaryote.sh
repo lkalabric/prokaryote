@@ -144,7 +144,7 @@ function khmer_bper () {
 	if [ ! -d $KHMERDIR ]; then
 		mkdir -vp $KHMERDIR
 		echo -e "Executando khmer em ${IODIR}...\n"
-		khmer normalize-by-median ${IODIR}/${LIBNAME}*.fastq \
+		khmer normalize-by-median -k ${KMER} ${IODIR}/${LIBNAME}*.fastq \
 			-R ${KHMERDIR}/${LIBNAME}_report.txt --report-frequency 100000 \
 			-o ${KHMERDIR}/${LIBNAME}.fastq
 	else
@@ -175,8 +175,8 @@ function spades_bper () {
 # Etapas obrigatórios: basecalling, demux/primer_removal ou demux_headcrop, reads_polishing e algum método de classificação taxonômica
 workflowList=(
 	'qc_bper trim_bper musket_bper flash_bper khmer_bper'
-	'trim_bper musket_bper'
 	'trim_bper musket_bper flash_bper khmer_bper'
+	'trim_bper musket_bper khmer_bper'
 )
 
 # Validação do WF
