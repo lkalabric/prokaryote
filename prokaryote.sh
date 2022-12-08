@@ -77,11 +77,12 @@ function trim_bper () {
 			echo $INDEX
 			((INDEX++))
 		done
-		#	echo $SHORTFILENAME
-		#	trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${SHORTFILENAME}_trimlog.txt \
-		#			-summary ${TRIMMOMATICDIR}/${SHORTFILENAME}_summary.txt \
-		#			-f $file \
-		#			SLIDINGWINDOW:4:20 MINLEN:35
+		trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${SHORTFILENAME}_trimlog.txt \
+					-summary ${TRIMMOMATICDIR}/${SHORTFILENAME}_summary.txt \
+					${FULLNAME[0]} ${FULLNAME[1]} \
+					${SHORTFILENAME[0]}_p_1 ${SHORTFILENAME[0]}_u_1 \
+					${SHORTFILENAME[1]}_p_2 ${SHORTFILENAME[1]}_u_2 \
+					SLIDINGWINDOW:4:20 MINLEN:35
 	else
 		echo "Dados analisados previamente..."
 	fi
