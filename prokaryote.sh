@@ -42,6 +42,7 @@ if [[ $REPLY =~ ^[Ss]$ ]]; then
 fi
 IODIR=$RAWDIR              
 FASTQCDIR="${RESULTSDIR}/FASTQC"
+TEMPDIR="${RESULTSDIR}/TEMP"
 TRIMMOMATICDIR="${RESULTSDIR}/TRIMMOMATIC"
 MUSKETDIR="${RESULTSDIR}/MUSKET"
 SPADESDIR="${RESULTSDIR}/SPADES"
@@ -67,6 +68,7 @@ function trim_bper () {
 	source activate trimmomatic
 	if [ ! -d $TRIMMOMATICDIR ]; then
 		mkdir -vp $TRIMMOMATICDIR
+		mkdir -vp $TEMPDIR
 		echo -e "Executando trimmomatic em ${IODIR}...\n"
 		INDEX=0
 		for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename {} \; | sort); do
@@ -80,8 +82,8 @@ function trim_bper () {
 		trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${SHORTFILENAME}_trimlog.txt \
 					-summary ${TRIMMOMATICDIR}/${SHORTFILENAME}_summary.txt \
 					${IODIR}/${FULLNAME[0]} ${IODIR}/${FULLNAME[1]} \
-					${TRIMMOMATICDIR}/${SHORTFILENAME[0]}.fastq ${TRIMMOMATICDIR}/${SHORTFILENAME[0]}_u.fastq \
-					${TRIMMOMATICDIR}/${SHORTFILENAME[1]}.fastq ${TRIMMOMATICDIR}/${SHORTFILENAME[1]}_u.fastq \
+					${TRIMMOMATICDIR}/${SHORTFILENAME[0]}.fastq ${TEMPDIR}/${SHORTFILENAME[0]}_u.fastq \
+					${TRIMMOMATICDIR}/${SHORTFILENAME[1]}.fastq ${TEMPDIR}/${SHORTFILENAME[1]}_u.fastq \
 					
 	else
 		echo "Dados analisados previamente..."
