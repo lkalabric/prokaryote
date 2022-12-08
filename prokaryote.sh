@@ -71,10 +71,10 @@ function trim_bper () {
 		INDEX=0
 		for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename {} \; | sort); do
 			FULLNAME[$INDEX]=$FILE
-			echo $FULLNAME[$INDEX]
+			echo "Este é nome completo ${FULLNAME[$INDEX]}"
 			SHORTFILENAME[$INDEX]=$(echo $FILE | cut -d "_" -f 3-5 | cut -d "." -f 1)
 			echo $SHORTFILENAME[$INDEX]
-			INDEX++
+			$INDEX++
 		done
 		#	echo $SHORTFILENAME
 		#	trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${SHORTFILENAME}_trimlog.txt \
