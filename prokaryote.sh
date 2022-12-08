@@ -20,6 +20,22 @@ if [[ $WF > 1 ]]; then
   exit 1
 fi
 
+# Lê o nome dos arquivos de entreda. O nome curto será o próprio nome da library
+INDEX=0
+for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename {} \; | sort); do
+	FULLNAME[$INDEX]=${FILE}
+	((INDEX++))
+done
+
+# Validação dos dados
+LIBSUFIX=$(echo $LIBNAME | cut -d "_" -f 2)
+SAMPLENAME=$(echo $FULLNAME[0] | cut -d "E" -f 1)
+if [[$SAMPLENAME -ne $LIBSUFIX]]; then
+	echo "Você copiou os dados errados para a pasta $LIBNAME!"
+	exit 3
+fi
+exit 4
+
 # Caminhos dos dados de entrada
 RAWDIR="${HOME}/data/${LIBNAME}"
 if [ ! -d $RAWDIR ]; then
@@ -46,23 +62,6 @@ TEMPDIR="${RESULTSDIR}/TEMP"
 TRIMMOMATICDIR="${RESULTSDIR}/TRIMMOMATIC"
 MUSKETDIR="${RESULTSDIR}/MUSKET"
 SPADESDIR="${RESULTSDIR}/SPADES"
-
-# Lê o nome dos arquivos de entreda. O nome curto será o próprio nome da library
-INDEX=0
-for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename {} \; | sort); do
-	FULLNAME[$INDEX]=${FILE}
-	((INDEX++))
-done
-
-# Validação dos dados
-LIBSUFIX=(echo $LIBNAME | cut -d "_" -f 2)
-SAMPLENAME=(echo $FULLNAME[0] | cut -d "E" -f 1)
-if [[$SAMPLENAME -ne $LIBSUFIX]]; then
-	echo "Você copiou os dados errados para a pasta $LIBNAME!"
-	exit 0
-fi
-
-exit 0
 
 # Parâmetro de otimização das análises
 KMER=21 # Defaut MAX_KMER_SIZE=28. Se necessário, alterar o Makefile e recompilar
@@ -133,7 +132,6 @@ function musket_bper () {
 # Define as etapas de cada workflow
 # Etapas obrigatórios: basecalling, demux/primer_removal ou demux_headcrop, reads_polishing e algum método de classificação taxonômica
 workflowList=(
-	'qc_bper trim_bper musket_bper'
 	'qc_bper trim_bper musket_bper'
 )
 
