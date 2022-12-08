@@ -47,6 +47,15 @@ TRIMMOMATICDIR="${RESULTSDIR}/TRIMMOMATIC"
 MUSKETDIR="${RESULTSDIR}/MUSKET"
 SPADESDIR="${RESULTSDIR}/SPADES"
 
+# Lê o nome dos arquivos e cria um nome curto
+INDEX=0
+for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename {} \; | sort); do
+	FULLNAME[$INDEX]=${FILE}
+	SHORTFILENAME[$INDEX]=$(echo ${FILE} | cut -d "_" -f 3-5 | cut -d "." -f 1)
+	((INDEX++))
+done
+
+
 # Parâmetro de otimização das análises
 THREADS="$(lscpu | grep 'CPU(s):' | awk '{print $2}' | sed -n '1p')"
 
@@ -70,13 +79,6 @@ function trim_bper () {
 		mkdir -vp $TRIMMOMATICDIR
 		mkdir -vp $TEMPDIR
 		echo -e "Executando trimmomatic em ${IODIR}...\n"
-		# Lê o nome dos arquivos e cria um nome curto
-		INDEX=0
-		for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename {} \; | sort); do
-			FULLNAME[$INDEX]=${FILE}
-			SHORTFILENAME[$INDEX]=$(echo ${FILE} | cut -d "_" -f 3-5 | cut -d "." -f 1)
-			((INDEX++))
-		done
 		# Executa o filtro de qualidade
 		trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${LIBNAME}_trimlog.txt \
 					-summary ${TRIMMOMATICDIR}/${LIBNAME}_summary.txt \
@@ -96,25 +98,13 @@ function musket_bper () {
 	if [ ! -d $MUSKETDIR ]; then
 		mkdir -vp $MUSKETDIR
 		echo -e "Executando musket em ${IODIR}...\n"
-		INDEX=0
-		for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq -exec basename {} \; | sort); do
-			FULLNAME[$INDEX]=${FILE}
-			echo "Este é nome completo ${FULLNAME[$INDEX]}"
-			SHORTFILENAME[$INDEX]=$(echo ${FILE} | cut -d "_" -f 3-5 | cut -d "." -f 1)
-			echo "Este é o nome curto ${SHORTFILENAME[$INDEX]}"
-			echo $INDEX
-			((INDEX++))
-		done
-		trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${LIBNAME}_trimlog.txt \
-					-summary ${TRIMMOMATICDIR}/${LIBNAME}_summary.txt \
-					${IODIR}/${FULLNAME[0]} ${IODIR}/${FULLNAME[1]} \
-					${TRIMMOMATICDIR}/${SHORTFILENAME[0]}.fastq ${TEMPDIR}/${SHORTFILENAME[0]}_u.fastq \
-					${TRIMMOMATICDIR}/${SHORTFILENAME[1]}.fastq ${TEMPDIR}/${SHORTFILENAME[1]}_u.fastq \
-					SLIDINGWINDOW:4:20 MINLEN:35
+		musket -omutli myout -inorder \
+		${TRIMMOMATICDIR}/${SHORTFILENAME[0]}.fastq ${TRIMMOMATICDIR}/${SHORTFILENAME[1]}.fastq \
+		${MUSKETDIR}/${SHORTFILENAME[0]}.fastq ${MUSKETDIR}/${SHORTFILENAME[1]}.fastq
 	else
 		echo "Dados analisados previamente..."
 	fi
-  	IODIR=$TRIMMOMATICDIR              
+  	IODIR=$MUSKETDIR              
 }
 
 
