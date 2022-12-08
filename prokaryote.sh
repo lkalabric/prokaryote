@@ -183,7 +183,7 @@ WORKFLOWLIST=(
 )
 
 # Validação do WF
-if [[ $WF -gt ${#workflowList[@]} ]]; then
+if [[ $WF -gt ${#WORKFLOWLIST[@]} ]]; then
 	echo "Erro: Workflow não definido!"
 	exit 4
 fi
