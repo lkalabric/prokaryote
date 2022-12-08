@@ -128,7 +128,7 @@ function flash_bper () {
 		echo -e "Executando flash em ${IODIR}...\n"
 		flash ${IODIR}/${LIBNAME}*.fastq \
 			-t ${THREADS} -o ${LIBNAME} -d ${FLASHDIR} 2>&1 | tee ${FLASHDIR}/${LIBNAME}_flash.log	
-		mv ${FLASHDIR}/${LIBNAME}.extendedFlags.fastq ${FLASHDIR}/${LIBNAME}.fastq
+		mv ${FLASHDIR}/${LIBNAME}.extendedFrags.fastq ${FLASHDIR}/${LIBNAME}.fastq
 		mv ${FLASHDIR}/${LIBNAME}.notCombined*.fastq ${FLASHDIR}/${LIBNAME}.notCombined*.fastnq
 	else
 		echo "Dados analisados previamente..."
