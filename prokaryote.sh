@@ -135,7 +135,7 @@ function flash_bper () {
 }
 
 # Normalização digital (remove a maioria das sequencias redundantes)
-# Link: 
+# Link: https://khmer-protocols.readthedocs.io/en/v0.8.2/mrnaseq/2-diginorm.html
 function khmer_bper () {
 	if [[ ! -d $KHMERDIR ]]; then
 		mkdir -vp $KHMERDIR
@@ -150,7 +150,7 @@ function khmer_bper () {
 }
 
 # Assemble reads de novo
-# Link: 
+# Link: https://github.com/ablab/spades
 function spades_bper () {
 	if [[ ! -d $SPADESDIR ]]; then
 		mkdir -vp $SPADESDIR
