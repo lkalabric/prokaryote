@@ -15,7 +15,7 @@ if [[ $# -ne 2 ]]; then
 	echo "Sintáxe: ./prokaryote.sh <LIBRARY> <WF: 1, 2, 3,...>"
 	exit 0
 fi
-if [[ $WF > 1 ]]; then
+if [[ $WF > 3 ]]; then
   echo "Erro: Workflow não disponível! Tente WF 1!"
   exit 1
 fi
