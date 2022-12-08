@@ -144,8 +144,8 @@ function khmer_bper () {
 	if [ ! -d $KHMERDIR ]; then
 		mkdir -vp $KHMERDIR
 		echo -e "Executando khmer em ${IODIR}...\n"
-		khmer normalize-by-median --force-single \
-			-s ${IODIR}/${LIBNAME}*.fastq \
+		khmer normalize-by-median ${IODIR}/${LIBNAME}*.fastq \
+			 --force-single \
 			-R ${KHMERDIR}/${LIBNAME}_report.txt --report-frequency 100000 \
 			-o ${KHMERDIR}/${LIBNAME}.fastq
 	else
