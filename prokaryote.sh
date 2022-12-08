@@ -44,7 +44,6 @@ if [[ $SAMPLENAME -ne $LIBSUFIX ]]; then
 	echo "Você copiou os dados errados para a pasta $LIBNAME!"
 	exit 3
 fi
-exit 4
 
 # Configuração das pastas de saída
 echo "Preparando pastas para (re-)análise dos dados..."
