@@ -22,7 +22,7 @@ fi
 
 # Caminhos dos dados de entrada
 RAWDIR="${HOME}/data/${LIBNAME}"
-if [ ! -d $RAWDIR ]; then
+if [[ ! -d $RAWDIR ]]; then
 	echo "Erro: Pasta de dados não encontrada!"
 	exit 2
 fi
@@ -38,9 +38,9 @@ for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename 
 done
 
 # Validação dos dados
-LIBSUFIX=$(echo $LIBNAME | cut -d "_" -f 2)
 SAMPLENAME=$(echo $FULLNAME[0] | cut -d "E" -f 1)
-if [ $SAMPLENAME -ne $LIBSUFIX ]; then
+LIBSUFIX=$(echo $LIBNAME | cut -d "_" -f 2)
+if [[ $SAMPLENAME -ne $LIBSUFIX ]]; then
 	echo "Você copiou os dados errados para a pasta $LIBNAME!"
 	exit 3
 fi
@@ -75,7 +75,7 @@ THREADS="$(lscpu | grep 'CPU(s):' | awk '{print $2}' | sed -n '1p')"
 # Foi utilizado para avaliar o sequenciamento e extrair alguns parâmtros para o Trimmomatic
 # Link: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
 function qc_bper () {
-	if [ ! -d $FASTQCDIR ]; then
+	if [[ ! -d $FASTQCDIR ]]; then
 		mkdir -vp $FASTQCDIR
 		echo -e "Executando fastqc em ${IODIR}...\n"
 		fastqc --noextract --nogroup -o ${FASTQCDIR} ${IODIR}/*.fastq.gz
@@ -88,7 +88,7 @@ function qc_bper () {
 # Link: http://www.usadellab.org/cms/?page=trimmomatic
 function trim_bper () {
 	source activate trimmomatic
-	if [ ! -d $TRIMMOMATICDIR ]; then
+	if [[ ! -d $TRIMMOMATICDIR ]]; then
 		mkdir -vp $TRIMMOMATICDIR
 		mkdir -vp $TEMPDIR
 		echo -e "Executando trimmomatic em ${IODIR}...\n"
@@ -108,7 +108,7 @@ function trim_bper () {
 # Correção de erros
 # Link: https://musket.sourceforge.net/homepage.htm
 function musket_bper () {
-	if [ ! -d $MUSKETDIR ]; then
+	if [[ ! -d $MUSKETDIR ]]; then
 		mkdir -vp $MUSKETDIR
 		echo -e "Executando musket em ${IODIR}...\n"
 		musket -k ${KMER} 536870912 -p ${THREADS} \
@@ -124,7 +124,7 @@ function musket_bper () {
 # Concatenar as reads forward e reverse para extender as reads
 # Link: http://ccb.jhu.edu/software/FLASH/
 function flash_bper () {
-	if [ ! -d $FLASHDIR ]; then
+	if [[ ! -d $FLASHDIR ]]; then
 		mkdir -vp $FLASHDIR
 		echo -e "Executando flash em ${IODIR}...\n"
 		flash ${IODIR}/${LIBNAME}*.fastq \
@@ -141,7 +141,7 @@ function flash_bper () {
 # Normalização digital (remove a maioria das sequencias redundantes)
 # Link: 
 function khmer_bper () {
-	if [ ! -d $KHMERDIR ]; then
+	if [[ ! -d $KHMERDIR ]]; then
 		mkdir -vp $KHMERDIR
 		echo -e "Executando khmer em ${IODIR}...\n"
 		khmer normalize-by-median -k ${KMER} ${IODIR}/${LIBNAME}*.fastq \
@@ -156,11 +156,11 @@ function khmer_bper () {
 # Assemble reads de novo
 # Link: 
 function spades_bper () {
-	if [ ! -d $SPADESDIR ]; then
+	if [[ ! -d $SPADESDIR ]]; then
 		mkdir -vp $SPADESDIR
 		echo -e "Executando spades em ${IODIR}...\n"
 		# Verifica o número de arquivos em ${IODIR}
-		if [ $(ls ${IODIR}/*.fastq | wc -l) -eq 1]; then
+		if [[ $(ls ${IODIR}/*.fastq | wc -l) -eq 1 ]]; then
 			spapes --merged ${IODIR}/${LIBNAME}.fastq \
 				--only-assembler --careful -o ${SPADESDIR}		
 		else
