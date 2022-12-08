@@ -157,10 +157,10 @@ function spades_bper () {
 		echo -e "Executando spades em ${IODIR}...\n"
 		# Verifica o número de arquivos em ${IODIR}
 		if [[ $(ls ${IODIR}/*.fastq | wc -l) -eq 1 ]]; then
-			spapes --merged ${IODIR}/${LIBNAME}.fastq \
+			spades --merged ${IODIR}/${LIBNAME}.fastq \
 				--only-assembler --careful -o ${SPADESDIR}		
 		else
-			spapes -1 ${IODIR}/${LIBNAME}_R1.fastq -2 ${IODIR}/${LIBNAME}_R2.fastq \
+			spades -1 ${IODIR}/${LIBNAME}_R1.fastq -2 ${IODIR}/${LIBNAME}_R2.fastq \
 			--only-assembler --careful -o ${SPADESDIR}
 		fi
 	else
