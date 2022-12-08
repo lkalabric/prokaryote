@@ -114,9 +114,8 @@ function musket_bper () {
 			${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
 			-omulti ${MUSKETDIR}/${LIBNAME} -inorder
 		mv ${MUSKETDIR}/${LIBNAME}.0 ${MUSKETDIR}/${LIBNAME}_R1.fastq
-		mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R2.fastq
-	else
-		echo "Dados analisados previamente..."
+		mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKET*IR}/${LIBNAME}_R2.fastq
+	else		echo "Dados analisados previamente..."
 	fi
   	IODIR=$MUSKETDIR              
 }
@@ -129,7 +128,7 @@ function flash_bper () {
 		echo -e "Executando flash em ${IODIR}...\n"
 		flash ${IODIR}/${LIBNAME}*.fastq \
 			-t ${THREADS} -o ${LIBNAME} -d ${FLASHDIR} 2>&1 | tee ${FLASHDIR}/${LIBNAME}_flash.log	
-		mv ${FLASHDIR}/${LIBNAME}.notCombined*.fastq ${FLASHDIR}/${LIBNAME}..notCombined*.fastnq
+		mv ${FLASHDIR}/${LIBNAME}.notCombined*.fastq ${FLASHDIR}/${LIBNAME}.notCombined*.fastnq
 	else
 		echo "Dados analisados previamente..."
 	fi
@@ -152,19 +151,29 @@ function khmer_bper () {
   	IODIR=$KHMERDIR              
 }
 
+# Assemble reads de novo
+# Link: 
+function spades_bper () {
+	if [ ! -d $SPADESDIR ]; then
+		mkdir -vp $SPADESDIR
+		echo -e "Executando spades em ${IODIR}...\n"
+		spapes -1 "${IODIR}/1E1_S1_L001_R1_001.fastq.gz" -2 "${IODIR}/1E1_S1_L001_R2_001.fastq.gz" \
+			--only-assembler --careful -o assembly-analysis
+	else
+		echo "Dados analisados previamente..."
+	fi
+ 		IODIR=$KHMERDIR              
+}
+
+
 
 
 # 3) Assembly das reads
-# spapes -1 "${IODIR}/1E1_S1_L001_R1_001.fastq.gz" -2 "${IODIR}/1E1_S1_L001_R2_001.fastq.gz" --only-assembler --careful -o assembly-analysis
 
 # 4) Assembly das contigs
 
-# 5) Visualização da montagem
-
-#
-# Main do script
-#
-
+# 5\
+	) Visualização da montagem
 # Define as etapas de cada workflow
 # Etapas obrigatórios: basecalling, demux/primer_removal ou demux_headcrop, reads_polishing e algum método de classificação taxonômica
 workflowList=(
