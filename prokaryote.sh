@@ -72,8 +72,9 @@ function trim_bper () {
 		for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename {} \; | sort); do
 			FULLNAME[$INDEX]=$FILE
 			echo "Este é nome completo ${FULLNAME[$INDEX]}"
-			SHORTFILENAME[$INDEX]=$(echo $FILE | cut -d "_" -f 3-5 | cut -d "." -f 1)
+			SHORTFILENAME[$INDEX]=$(echo $FULLNAME[$INDEX] | cut -d "_" -f 3-5 | cut -d "." -f 1)
 			echo $SHORTFILENAME[$INDEX]
+			echo $INDEX
 			((INDEX++))
 		done
 		#	echo $SHORTFILENAME
