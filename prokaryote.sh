@@ -166,7 +166,7 @@ function spades_bper () {
 	else
 		echo "Dados analisados previamente..."
 	fi
- 		IODIR=$KHMERDIR              
+ 		IODIR=$SPADESDIR              
 }
 
 #
@@ -176,10 +176,10 @@ function spades_bper () {
 # Define as etapas de cada workflow
 # Etapas obrigatórios: basecalling, demux/primer_removal ou demux_headcrop, reads_polishing e algum método de classificação taxonômica
 workflowList=(
-	'qc_bper trim_bper musket_bper flash_bper khmer_bper spades_ber'
-	'trim_bper musket_bper flash_bper khmer_bper spades_ber'
-	'trim_bper musket_bper khmer_bper spades_ber'
-	'trim_bper musket_bper spades_ber'
+	'qc_bper trim_bper musket_bper flash_bper khmer_bper spades_bper'
+	'trim_bper musket_bper flash_bper khmer_bper spades_bper'
+	'trim_bper musket_bper khmer_bper spades_bper'
+	'trim_bper musket_bper spades_bper'
 )
 
 # Validação do WF
@@ -187,16 +187,18 @@ if [[ $WF -gt ${#workflowList[@]} ]]; then
 	echo "Erro: Workflow não definido!"
 	exit 4
 fi
-# Índice para o array workflowList 0..n
-indice=$(expr $WF - 1)
 
 # Execução das análises propriamente ditas a partir do workflow selecionado
 echo -e "\nExecutando o workflow WF$WF..."
-echo "Passos do WF$WF: ${workflowList[$indice]}"
+
+# Índice para o array workflowList 0..n
+INDICE=$(expr $WF - 1)
+echo "Passos do WF$WF: ${WORKFLOWLIST[$INDICE]}"
+
 # Separa cada etapa do workflow no vetor steps
-read -r -a steps <<< "${workflowList[$indice]}"
-for call_func in ${steps[@]}; do
-	echo -e "\nExecutando o passo $call_func... "
-	eval $call_func
+read -r -a STEPS <<< "${WORKFLOWLIST[$INDICE]}"
+for CALL_FUNC in ${STEPS[@]}; do
+	echo -e "\nExecutando o passo $CALL_FUNC... "
+	eval $CALL_FUNC
 done
 exit 4
