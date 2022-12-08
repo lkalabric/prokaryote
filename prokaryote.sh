@@ -180,9 +180,10 @@ function spades_bper () {
 # Define as etapas de cada workflow
 # Etapas obrigatórios: basecalling, demux/primer_removal ou demux_headcrop, reads_polishing e algum método de classificação taxonômica
 workflowList=(
-	'qc_bper trim_bper musket_bper flash_bper khmer_bper'
-	'trim_bper musket_bper flash_bper khmer_bper'
-	'trim_bper musket_bper khmer_bper'
+	'qc_bper trim_bper musket_bper flash_bper khmer_bper spades_ber'
+	'trim_bper musket_bper flash_bper khmer_bper spades_ber'
+	'trim_bper musket_bper khmer_bper spades_ber'
+	'trim_bper musket_bper spades_ber'
 )
 
 # Validação do WF
