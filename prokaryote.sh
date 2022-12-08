@@ -135,6 +135,7 @@ function musket_bper () {
 # Etapas obrigatórios: basecalling, demux/primer_removal ou demux_headcrop, reads_polishing e algum método de classificação taxonômica
 workflowList=(
 	'qc_bper trim_bper musket_bper'
+	'trim_bper musket_bper'
 )
 
 # Validação do WF
