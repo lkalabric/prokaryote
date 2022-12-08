@@ -72,6 +72,7 @@ THREADS="$(lscpu | grep 'CPU(s):' | awk '{print $2}' | sed -n '1p')"
 
 # Quality control report
 # Foi utilizado para avaliar o sequenciamento e extrair alguns parâmtros para o Trimmomatic
+# Link: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
 function qc_bper () {
 	if [ ! -d $FASTQCDIR ]; then
 		mkdir -vp $FASTQCDIR
@@ -84,6 +85,7 @@ function qc_bper () {
 
 
 # Quality control filter using Trimmomatic
+# Link: http://www.usadellab.org/cms/?page=trimmomatic
 function trim_bper () {
 	source activate trimmomatic
 	if [ ! -d $TRIMMOMATICDIR ]; then
@@ -104,13 +106,14 @@ function trim_bper () {
 }
 
 # Correção de erros
+# Link: https://musket.sourceforge.net/homepage.htm
 function musket_bper () {
 	if [ ! -d $MUSKETDIR ]; then
 		mkdir -vp $MUSKETDIR
 		echo -e "Executando musket em ${IODIR}...\n"
 		musket -k ${KMER} 536870912 -p ${THREADS} \
-		${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
-		-omulti ${MUSKETDIR}/${LIBNAME} -inorder
+			${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
+			-omulti ${MUSKETDIR}/${LIBNAME} -inorder
 	else
 		echo "Dados analisados previamente..."
 	fi
@@ -118,17 +121,34 @@ function musket_bper () {
 }
 
 # Concatenar as reads forward e reverse para extender as reads
+# Link: http://ccb.jhu.edu/software/FLASH/
 function flash_bper () {
 	if [ ! -d $FLASHDIR ]; then
 		mkdir -vp $FLASHDIR
 		echo -e "Executando flash em ${IODIR}...\n"
-		flash ${IODIR}/${LIBNAME}.0 ${IODIR}/${LIBNAME}.1 -t ${THREADS} -o ${LIBNAME} -d ${FLASHDIR} 2>&1 | tee ${FLASHDIR}/${LIBNAME}_flash.log	
+		flash ${IODIR}/${LIBNAME}.0 ${IODIR}/${LIBNAME}.1 \
+			-t ${THREADS} -o ${LIBNAME} -d ${FLASHDIR} 2>&1 | tee ${FLASHDIR}/${LIBNAME}_flash.log	
 	else
 		echo "Dados analisados previamente..."
 	fi
   	IODIR=$FLASHDIR              
 }
 
+# Normalização digital (remove a maioria das sequencias redundantes)
+# Link: 
+function khmer_bper () {
+	if [ ! -d $KHMERDIR ]; then
+		mkdir -vp $KHMERDIR
+		echo -e "Executando khmer em ${IODIR}...\n"
+		khmer mormlalize-by-median --force-single \
+			-s ${IODIR}/${LIBNAME}.extendedFrags.fastq \
+			-R ${KHMERDIR}/${LIBNAME}_report.txt --report-frequency \
+			-o ${KHMERDIR}/${LIBNAME}.fastq
+	else
+		echo "Dados analisados previamente..."
+	fi
+  	IODIR=$KHMERDIR              
+}
 
 
 
@@ -146,9 +166,9 @@ function flash_bper () {
 # Define as etapas de cada workflow
 # Etapas obrigatórios: basecalling, demux/primer_removal ou demux_headcrop, reads_polishing e algum método de classificação taxonômica
 workflowList=(
-	'qc_bper trim_bper musket_bper flash_bper'
+	'qc_bper trim_bper musket_bper flash_bper khmer_bper'
 	'trim_bper musket_bper'
-	'trim_bper musket_bper flash_bper'
+	'trim_bper musket_bper flash_bper khmer_bper'
 )
 
 # Validação do WF
