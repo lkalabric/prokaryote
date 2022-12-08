@@ -146,7 +146,7 @@ function khmer_bper () {
 		echo -e "Executando khmer em ${IODIR}...\n"
 		khmer normalize-by-median --force-single \
 			-s ${IODIR}/${LIBNAME}*.fastq \
-			-R ${KHMERDIR}/${LIBNAME}_report.txt --report-frequency \
+			-R ${KHMERDIR}/${LIBNAME}_report.txt --report-frequency 100000 \
 			-o ${KHMERDIR}/${LIBNAME}.fastq
 	else
 		echo "Dados analisados previamente..."
