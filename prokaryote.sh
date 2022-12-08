@@ -64,7 +64,7 @@ function qc_bper () {
 
 # Quality control filter using Trimmomatic
 function trim_bper () {
-	conda activate trimmomatic
+	source activate trimmomatic
 	if [ ! -d $TRIMMOMATICDIR ]; then
 		mkdir -vp $TRIMMOMATICDIR
 		echo -e "Executando trimmomatic em ${IODIR}...\n"
