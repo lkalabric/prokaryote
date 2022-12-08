@@ -110,7 +110,7 @@ function musket_bper () {
 		echo -e "Executando musket em ${IODIR}...\n"
 		musket -k ${KMER} 536870912 -p ${THREADS} \
 		${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
-		-omulti ${IODIR}/{LIBNAME} -inorder
+		-omulti ${MUSKETDIR}/{LIBNAME} -inorder
 	else
 		echo "Dados analisados previamente..."
 	fi
@@ -120,7 +120,7 @@ function musket_bper () {
 # Concatenar as reads forward e reverse para extender as reads
 function flash_bper () {
 	if [ ! -d $FLASHDIR ]; then
-		mkdir -vp $MUSKETDIR
+		mkdir -vp $FLASHDIR
 		echo -e "Executando flash em ${IODIR}...\n"
 		flash ${IODIR}/reads_1.fq ${IODIR}/reads_2.fq 2>&1 | tee ${FLASHDIR}/${LIBNAME}_flash.log	
 	else
