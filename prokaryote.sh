@@ -109,7 +109,7 @@ function musket_bper () {
 		mkdir -vp $MUSKETDIR
 		echo -e "Executando musket em ${IODIR}...\n"
 		musket -k ${KMER} 536870912 -p ${THREADS} \
-		${IODIR}/{LIBNAME}_R1.fastq ${IODIR}/{LIBNAME}_R2.fastq \
+		${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
 		-omulti ${IODIR}/{LIBNAME} -inorder
 	else
 		echo "Dados analisados previamente..."
