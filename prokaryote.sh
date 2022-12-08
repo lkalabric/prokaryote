@@ -107,7 +107,7 @@ function musket_bper () {
 	if [ ! -d $MUSKETDIR ]; then
 		mkdir -vp $MUSKETDIR
 		echo -e "Executando musket em ${IODIR}...\n"
-		musket -k ${KMER} -p ${THREADS} \
+		musket -p ${THREADS} \
 		${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
 		-o ${LIBNAME}.fastq 
 	else
