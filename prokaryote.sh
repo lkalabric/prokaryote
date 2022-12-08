@@ -40,7 +40,7 @@ done
 # Validação dos dados
 LIBSUFIX=$(echo $LIBNAME | cut -d "_" -f 2)
 SAMPLENAME=$(echo $FULLNAME[0] | cut -d "E" -f 1)
-if [[$SAMPLENAME -ne $LIBSUFIX]]; then
+if [[ $SAMPLENAME -ne $LIBSUFIX ]]; then
 	echo "Você copiou os dados errados para a pasta $LIBNAME!"
 	exit 3
 fi
