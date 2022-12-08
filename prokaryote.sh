@@ -74,7 +74,7 @@ function trim_bper () {
 			echo "Este é nome completo ${FULLNAME[$INDEX]}"
 			SHORTFILENAME[$INDEX]=$(echo $FILE | cut -d "_" -f 3-5 | cut -d "." -f 1)
 			echo $SHORTFILENAME[$INDEX]
-			$INDEX++
+			((INDEX++))
 		done
 		#	echo $SHORTFILENAME
 		#	trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${SHORTFILENAME}_trimlog.txt \
