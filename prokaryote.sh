@@ -80,9 +80,9 @@ function trim_bper () {
 		trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${SHORTFILENAME}_trimlog.txt \
 					-summary ${TRIMMOMATICDIR}/${SHORTFILENAME}_summary.txt \
 					${IODIR}/${FULLNAME[0]} ${IODIR}/${FULLNAME[1]} \
-					${TRIMMOMATICDIR}/${SHORTFILENAME[0]}_p_1 ${TRIMMOMATICDIR}/${SHORTFILENAME[0]}_u_1 \
-					${TRIMMOMATICDIR}/${SHORTFILENAME[1]}_p_2 ${TRIMMOMATICDIR}/${SHORTFILENAME[1]}_u_2 \
-					SLIDINGWINDOW:4:20 MINLEN:35
+					${TRIMMOMATICDIR}/${SHORTFILENAME[0]}.fastq ${TRIMMOMATICDIR}/${SHORTFILENAME[0]}_u.fastq \
+					${TRIMMOMATICDIR}/${SHORTFILENAME[1]}.fastq ${TRIMMOMATICDIR}/${SHORTFILENAME[1]}_u.fastq \
+					
 	else
 		echo "Dados analisados previamente..."
 	fi
