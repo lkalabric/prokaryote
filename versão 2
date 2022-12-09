@@ -138,7 +138,7 @@ function flash_bper () {
 }
 
 # Normalização digital (remove a maioria das sequencias redundantes)
-# Link: https://khmer-protocols.readthedocs.io/en/v0.8.2/mrnaseq/2-diginorm.html
+# Link: 
 function khmer_bper () {
 	if [[ ! -d $KHMERDIR ]]; then
 		mkdir -vp $KHMERDIR
@@ -146,6 +146,8 @@ function khmer_bper () {
 		khmer normalize-by-median -k ${KMER} ${IODIR}/${LIBNAME}*.fastq \
 			-R ${KHMERDIR}/${LIBNAME}_report.txt --report-frequency 100000 \
 			-o ${KHMERDIR}/${LIBNAME}.fastq
+			
+		# /usr/local/share/khmer/scripts/normalize-by-median.py -p -k 20 -C 20 -N 4 -x 3e9 --savehash normC20k20.kh *.pe.qc.fq.gz
 	else
 		echo "Dados analisados previamente..."
 	fi
@@ -205,4 +207,3 @@ for CALL_FUNC in ${STEPS[@]}; do
 	eval $CALL_FUNC
 done
 exit 4
-
