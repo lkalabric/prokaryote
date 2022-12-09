@@ -7,6 +7,8 @@
 # Controle de versão: Incluir o log das próximas atualizações aqui
 # Versão 1.0 de 07 DEZ 2022 - Programa inicial revisado
 
+# Requirements: bbmap, fastqc, conda, trimmomatic, musket, flash, khmer, spades
+
 # Entrada de dados
 LIBNAME=$1
 WF=$2
@@ -107,11 +109,20 @@ function musket_bper () {
 	if [[ ! -d $MUSKETDIR ]]; then
 		mkdir -vp $MUSKETDIR
 		echo -e "Executando musket em ${IODIR}...\n"
+		
+		# Experimental code, run in wf5
 		musket -k ${KMER} 536870912 -p ${THREADS} \
-			${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
-			-omulti ${MUSKETDIR}/${LIBNAME} -inorder
-		mv ${MUSKETDIR}/${LIBNAME}.0 ${MUSKETDIR}/${LIBNAME}_R1.fastq
-		mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R2.fastq
+			${IODIR}/${LIBNAME}*.fastq \
+			-omulti ${MUSKETDIR}/${LIBNAME} -inorder -lowercase
+		#mv ${MUSKETDIR}/${LIBNAME}.0 ${MUSKETDIR}/${LIBNAME}_R1.fastq
+		#mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R2.fastq
+		
+		# Original code
+		# musket -k ${KMER} 536870912 -p ${THREADS} \
+		#	${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
+		#	-omulti ${MUSKETDIR}/${LIBNAME} -inorder -lowercase
+		#mv ${MUSKETDIR}/${LIBNAME}.0 ${MUSKETDIR}/${LIBNAME}_R1.fastq
+		#mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R2.fastq
 	else		echo "Dados analisados previamente..."
 	fi
   	IODIR=$MUSKETDIR              
@@ -180,6 +191,7 @@ WORKFLOWLIST=(
 	'trim_bper musket_bper flash_bper khmer_bper spades_bper'
 	'trim_bper musket_bper khmer_bper spades_bper'
 	'trim_bper musket_bper spades_bper'
+	'trim_bper musket_bper'
 )
 
 # Validação do WF
