@@ -64,6 +64,7 @@ MUSKETDIR="${RESULTSDIR}/MUSKET"
 FLASHDIR="${RESULTSDIR}/FLASH"
 KHMERDIR="${RESULTSDIR}/KHMER"
 SPADESDIR="${RESULTSDIR}/SPADES"
+SPADES2DIR="${RESULTSDIR}/SPADES2"
 
 # Parâmetro de otimização das análises
 KMER=21 # Defaut MAX_KMER_SIZE=28. Se necessário, alterar o Makefile e recompilar
@@ -91,12 +92,22 @@ function trim_bper () {
 		# mkdir -vp $TEMPDIR
 		echo -e "Executando trimmomatic em ${IODIR}...\n"
 		# Executa o filtro de qualidade
+
+		# New code
 		trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${LIBNAME}_trimlog.txt \
 					-summary ${TRIMMOMATICDIR}/${LIBNAME}_summary.txt \
-					${IODIR}/${FULLNAME[0]} ${IODIR}/${FULLNAME[1]} \
-					${TRIMMOMATICDIR}/${LIBNAME}_R1_paired.fastq ${TRIMMOMATICDIR}/${LIBNAME}_R1u.fastq \
-					${TRIMMOMATICDIR}/${LIBNAME}_R2_paired.fastq ${TRIMMOMATICDIR}/${LIBNAME}_R2u.fastq \
+					${IODIR}/*.fastq* \
+					${TRIMMOMATICDIR}/${LIBNAME}_R1.fastq ${TRIMMOMATICDIR}/${LIBNAME}_R1u.fastq \
+					${TRIMMOMATICDIR}/${LIBNAME}_R2.fastq ${TRIMMOMATICDIR}/${LIBNAME}_R2u.fastq \
 					SLIDINGWINDOW:4:20 MINLEN:35
+		
+		# Original code
+		# trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${LIBNAME}_trimlog.txt \
+		#			-summary ${TRIMMOMATICDIR}/${LIBNAME}_summary.txt \
+		#			${IODIR}/${FULLNAME[0]} ${IODIR}/${FULLNAME[1]} \
+		#			${TRIMMOMATICDIR}/${LIBNAME}_R1_p.fastq ${TRIMMOMATICDIR}/${LIBNAME}_R1_u.fastq \
+		#			${TRIMMOMATICDIR}/${LIBNAME}_R2_p.fastq ${TRIMMOMATICDIR}/${LIBNAME}_R2_u.fastq \
+		#			SLIDINGWINDOW:4:20 MINLEN:35
 	else
 		echo "Dados analisados previamente..."
 	fi
@@ -110,10 +121,10 @@ function musket_bper () {
 		mkdir -vp $MUSKETDIR
 		echo -e "Executando musket em ${IODIR}...\n"
 		
-		# Experimental code, run in wf5
+		# New code
 		musket -k ${KMER} 536870912 -p ${THREADS} \
 			${IODIR}/${LIBNAME}*.fastq \
-			-omulti ${MUSKETDIR}/${LIBNAME} -inorder -lowercase
+			-omulti ${MUSKETDIR}/${LIBNAME}* -inorder -lowercase
 		#mv ${MUSKETDIR}/${LIBNAME}.0 ${MUSKETDIR}/${LIBNAME}_R1.fastq
 		#mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R2.fastq
 		
@@ -179,6 +190,27 @@ function spades_bper () {
 	fi
  		IODIR=$SPADESDIR              
 }
+
+# Assemble contigs-end-to-end
+# Link: https://github.com/ablab/spades
+function spades2_bper () {
+	if [[ ! -d $SPADES2DIR ]]; then
+		mkdir -vp $SPADES2DIR
+		echo -e "Executando spades em ${IODIR}...\n"
+		# Verifica o número de arquivos em ${IODIR}
+		if [[ $(ls ${IODIR}/*.fastq | wc -l) -eq 1 ]]; then
+			spades --12 ${IODIR}/${LIBNAME}.fastq \
+				--only-assembler --careful -o ${SPADESDIR}		
+		else
+			spades -1 ${IODIR}/${LIBNAME}_R1.fastq -2 ${IODIR}/${LIBNAME}_R2.fastq \
+			--only-assembler --careful -o ${SPADESDIR}
+		fi
+	else
+		echo "Dados analisados previamente..."
+	fi
+ 		IODIR=$SPADES2DIR              
+}
+
 
 #
 # Main do script
