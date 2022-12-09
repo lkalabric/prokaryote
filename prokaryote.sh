@@ -58,7 +58,7 @@ else
 	fi
 fi
 FASTQCDIR="${RESULTSDIR}/FASTQC"
-TEMPDIR="${RESULTSDIR}/TEMP"
+# TEMPDIR="${RESULTSDIR}/TEMP"
 TRIMMOMATICDIR="${RESULTSDIR}/TRIMMOMATIC"
 MUSKETDIR="${RESULTSDIR}/MUSKET"
 FLASHDIR="${RESULTSDIR}/FLASH"
@@ -88,14 +88,14 @@ function trim_bper () {
 	source activate trimmomatic
 	if [[ ! -d $TRIMMOMATICDIR ]]; then
 		mkdir -vp $TRIMMOMATICDIR
-		mkdir -vp $TEMPDIR
+		# mkdir -vp $TEMPDIR
 		echo -e "Executando trimmomatic em ${IODIR}...\n"
 		# Executa o filtro de qualidade
 		trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${LIBNAME}_trimlog.txt \
 					-summary ${TRIMMOMATICDIR}/${LIBNAME}_summary.txt \
 					${IODIR}/${FULLNAME[0]} ${IODIR}/${FULLNAME[1]} \
-					${TRIMMOMATICDIR}/${LIBNAME}_R1.fastq ${TEMPDIR}/${LIBNAME}_R1_u.fastq \
-					${TRIMMOMATICDIR}/${LIBNAME}_R2.fastq ${TEMPDIR}/${LIBNAME}_R2_u.fastq \
+					${TRIMMOMATICDIR}/${LIBNAME}_R1_paired.fastq ${TRIMMOMATICDIR}/${LIBNAME}_R1u.fastq \
+					${TRIMMOMATICDIR}/${LIBNAME}_R2_paired.fastq ${TRIMMOMATICDIR}/${LIBNAME}_R2u.fastq \
 					SLIDINGWINDOW:4:20 MINLEN:35
 	else
 		echo "Dados analisados previamente..."
