@@ -182,7 +182,7 @@ function spades_bper () {
 			spades --12 ${IODIR}/${LIBNAME}.fastq \
 				--only-assembler --careful -o ${SPADESDIR}		
 		else
-			spades -1 $(${IODIR}/*R1*.fastq*) -2 $(${IODIR}/*R2*.fastq*) \
+			spades -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
 			--only-assembler --careful -o ${SPADESDIR}
 		fi
 	else
