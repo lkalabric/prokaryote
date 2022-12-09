@@ -182,7 +182,7 @@ function spades_bper () {
 			spades --12 ${IODIR}/${LIBNAME}.fastq \
 				--only-assembler --careful -o ${SPADESDIR}		
 		else
-			spades -1 ${IODIR}/${LIBNAME}_R1.fastq -2 ${IODIR}/${LIBNAME}_R2.fastq \
+			spades -1 ${IODIR}/${LIBNAME}*R1*.fastq* -2 ${IODIR}/${LIBNAME}*R2*.fastq* \
 			--only-assembler --careful -o ${SPADESDIR}
 		fi
 	else
@@ -216,11 +216,17 @@ function spades2_bper () {
 # Main do script
 #
 
+# wf1 - full script
+# wf2 - naive assembly with no filtering or correction
+# wf3 - alternative method1
+# wf4 - alternative method2
+# wf5 - tests of parts of the script
+
 # Define as etapas de cada workflow
 # Etapas obrigatórios: basecalling, demux/primer_removal ou demux_headcrop, reads_polishing e algum método de classificação taxonômica
 WORKFLOWLIST=(
 	'qc_bper trim_bper musket_bper flash_bper khmer_bper spades_bper'
-	'trim_bper musket_bper flash_bper khmer_bper spades_bper'
+	'spades_bper'
 	'trim_bper musket_bper khmer_bper spades_bper'
 	'trim_bper musket_bper spades_bper'
 	'trim_bper musket_bper'
