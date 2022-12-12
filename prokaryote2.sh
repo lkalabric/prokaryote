@@ -159,7 +159,7 @@ function khmer_bper () {
 	if [[ ! -d $KHMERDIR ]]; then
 		mkdir -vp $KHMERDIR
 		echo -e "\nExecutando khmer em ${IODIR}...\n"
-		khmer normalize-by-median -u ${IODIR}/${LIBNAME}*.fastq \
+		khmer normalize-by-median -M 10000000 -u ${IODIR}/${LIBNAME}*.fastq \
 			-s ${KHMERDIR}/${LIBNAME}_graph \
 			-R ${KHMERDIR}/${LIBNAME}_report.txt --report-frequency 100000 \
 			-o ${KHMERDIR}/${LIBNAME}.fastq
@@ -191,7 +191,7 @@ function spades_bper () {
 			;;
 		2)
 			echo -e "\nFlag para controle de fluxo da montagem pelo Spades: $FLAG\n"
-			spades.py -s ${IODIR}/*.fastq
+			spades.py -s ${IODIR}/*.fastq \
 				--only-assembler --careful -o ${SPADESDIR}
 			;;
 		*)
