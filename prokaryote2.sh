@@ -90,7 +90,7 @@ function trim_bper () {
 	if [[ ! -d $TRIMMOMATICDIR ]]; then
 		mkdir -vp $TRIMMOMATICDIR
 		mkdir -vp $TEMPDIR
-		echo -e "Executando trimmomatic em ${IODIR}...\n"
+		echo -e "\nExecutando trimmomatic em ${IODIR}...\n"
 		# Executa o filtro de qualidade
 		trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${LIBNAME}_trimlog.txt \
 					-summary ${TRIMMOMATICDIR}/${LIBNAME}_summary.txt \
@@ -112,7 +112,7 @@ function trim_bper () {
 function musket_bper () {
 	if [[ ! -d $MUSKETDIR ]]; then
 		mkdir -vp $MUSKETDIR
-		echo -e "Executando musket em ${IODIR}...\n"
+		echo -e "\nExecutando musket em ${IODIR}...\n"
 		
 		# New code
 		musket -k ${KMER} 536870912 -p ${THREADS} \
@@ -139,7 +139,7 @@ function musket_bper () {
 function flash_bper () {
 	if [[ ! -d $FLASHDIR ]]; then
 		mkdir -vp $FLASHDIR
-		echo -e "Executando flash em ${IODIR}...\n"
+		echo -e "\nExecutando flash em ${IODIR}...\n"
 		flash ${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
 			-t ${THREADS} -M 100 -o ${LIBNAME} -d ${FLASHDIR} 2>&1 | tee ${FLASHDIR}/${LIBNAME}_flash.log	
 		mv ${FLASHDIR}/${LIBNAME}.extendedFrags.fastq ${FLASHDIR}/${LIBNAME}_R1R2e.fastq
@@ -158,7 +158,7 @@ function flash_bper () {
 function khmer_bper () {
 	if [[ ! -d $KHMERDIR ]]; then
 		mkdir -vp $KHMERDIR
-		echo -e "Executando khmer em ${IODIR}...\n"
+		echo -e "\nExecutando khmer em ${IODIR}...\n"
 		khmer normalize-by-median -u ${IODIR}/${LIBNAME}*.fastq \
 			-s ${KHMERDIR}/${LIBNAME}_graph \
 			-R ${KHMERDIR}/${LIBNAME}_report.txt --report-frequency 100000 \
@@ -174,23 +174,23 @@ function khmer_bper () {
 function spades_bper () {
 	if [[ ! -d $SPADESDIR ]]; then
 		mkdir -vp $SPADESDIR
-		echo -e "Executando spades em ${IODIR}...\n"
+		echo -e "\nExecutando spades em ${IODIR}...\n"
 		
 		# New
 		case $FLAG in
 		0) 
-			echo -e "Flag para controle de fluxo da montagem pelo Spades: $FLAG\n"
+			echo -e "\nFlag para controle de fluxo da montagem pelo Spades: $FLAG\n"
 			spades.py -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
 				--only-assembler --careful -o ${SPADESDIR}
 			;;
 		1) 
-			echo -e "Flag para controle de fluxo da montagem pelo Spades: $FLAG\n"
+			echo -e "\nFlag para controle de fluxo da montagem pelo Spades: $FLAG\n"
 			spades.py -1 ${IODIR}/*R1.fastq* -2 ${IODIR}/*R2.fastq* \
 				-s ${IODIR}/*R1R2u.fastq* \
 				--only-assembler --careful -o ${SPADESDIR}
 			;;
 		2)
-			echo -e "Flag para controle de fluxo da montagem pelo Spades: $FLAG\n"
+			echo -e "\nFlag para controle de fluxo da montagem pelo Spades: $FLAG\n"
 			spades.py -s ${IODIR}/*.fastq
 				--only-assembler --careful -o ${SPADESDIR}
 			;;
@@ -222,20 +222,15 @@ function spades_bper () {
  		IODIR=$SPADESDIR              
 }
 
-# Assemble contigs-end-to-end
+# Assemble contigs end-to-end
 # Link: https://github.com/ablab/spades
 function spades2_bper () {
 	if [[ ! -d $SPADES2DIR ]]; then
 		mkdir -vp $SPADES2DIR
-		echo -e "Executando spades em ${IODIR}...\n"
+		echo -e "\nExecutando spades para montagem as contigs end-to-end em ${IODIR}...\n"
 		# Verifica o número de arquivos em ${IODIR}
-		if [[ $(ls ${IODIR}/*.fastq | wc -l) -eq 1 ]]; then
-			spades --12 ${IODIR}/${LIBNAME}.fastq \
-				--only-assembler --careful -o ${SPADESDIR}		
-		else
-			spades -1 ${IODIR}/${LIBNAME}_R1.fastq -2 ${IODIR}/${LIBNAME}_R2.fastq \
-			--only-assembler --careful -o ${SPADESDIR}
-		fi
+		spades.py -s ${IODIR}/contigs.fastq
+				--only-assembler --careful -o ${SPADESDIR}
 	else
 		echo "Dados analisados previamente..."
 	fi
