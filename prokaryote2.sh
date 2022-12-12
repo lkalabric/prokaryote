@@ -65,6 +65,7 @@ FLASHDIR="${RESULTSDIR}/FLASH"
 KHMERDIR="${RESULTSDIR}/KHMER"
 SPADESDIR="${RESULTSDIR}/SPADES"
 SPADES2DIR="${RESULTSDIR}/SPADES2"
+FLAG=0
 
 # Parâmetro de otimização das análises
 KMER=21 # Defaut MAX_KMER_SIZE=28. Se necessário, alterar o Makefile e recompilar
@@ -100,6 +101,7 @@ function trim_bper () {
 					SLIDINGWINDOW:4:20 MINLEN:35
 		# Concatena as reads forward e reversar não pareadas para seguir como arquivo singled-end
 		cat ${TEMPDIR}/${LIBNAME}_R1u.fastq ${TEMPDIR}/${LIBNAME}_R2u.fastq > ${TRIMMOMATICDIR}/${LIBNAME}_R1R2u.fastq
+		FLAG=1
 	else
 		echo "Dados analisados previamente..."
 	fi
@@ -138,11 +140,12 @@ function flash_bper () {
 	if [[ ! -d $FLASHDIR ]]; then
 		mkdir -vp $FLASHDIR
 		echo -e "Executando flash em ${IODIR}...\n"
-		flash ${IODIR}/${LIBNAME}*.fastq \
+		flash ${IODIR}/${LIBNAME}R1.fastq ${IODIR}/${LIBNAME}R2.fastq \
 			-t ${THREADS} -o ${LIBNAME} -d ${FLASHDIR} 2>&1 | tee ${FLASHDIR}/${LIBNAME}_flash.log	
-		mv ${FLASHDIR}/${LIBNAME}.extendedFrags.fastq ${FLASHDIR}/${LIBNAME}.fastq
-		mv ${FLASHDIR}/${LIBNAME}.notCombined_1.fastq ${FLASHDIR}/${LIBNAME}.notCombined_1.fastnq
-		mv ${FLASHDIR}/${LIBNAME}.notCombined_2.fastq ${FLASHDIR}/${LIBNAME}.notCombined_2.fastnq
+		mv ${FLASHDIR}/${LIBNAME}.extendedFrags.fastq ${FLASHDIR}/${LIBNAME}R1R2e.fastq
+		mv ${FLASHDIR}/${LIBNAME}.notCombined_1.fastq ${FLASHDIR}/${LIBNAME}.R1nc.fastq
+		mv ${FLASHDIR}/${LIBNAME}.notCombined_2.fastq ${FLASHDIR}/${LIBNAME}.R2nc.fastq
+		FLAG=2
 	else
 		echo "Dados analisados previamente..."
 	fi
@@ -172,14 +175,31 @@ function spades_bper () {
 		echo -e "Executando spades em ${IODIR}...\n"
 		
 		# New
-		if [[ $(ls ${IODIR}/*.fastq* | wc -l) -eq 2 ]]; then
+		case FLAG in
+		0) 
 			spades.py -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
 				--only-assembler --careful -o ${SPADESDIR}
-		else
+			;;
+		1) 
 			spades.py -1 ${IODIR}/*R1.fastq* -2 ${IODIR}/*R2.fastq* \
 				-s ${IODIR}/*R1R2u.fastq* \
 				--only-assembler --careful -o ${SPADESDIR}
-		fi
+			;;
+		2)
+			spades.py -s ${IODIR}/*.fastq
+				--only-assembler --careful -o ${SPADESDIR}
+			;;
+		*)
+			if [[ $(ls ${IODIR}/*.fastq* | wc -l) -eq 2 ]]; then
+				spades.py -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
+					--only-assembler --careful -o ${SPADESDIR}
+			else
+				spades.py -1 ${IODIR}/*R1.fastq* -2 ${IODIR}/*R2.fastq* \
+					-s ${IODIR}/*R1R2u.fastq* \
+					--only-assembler --careful -o ${SPADESDIR}
+			fi
+			;;
+		esac
 		# Original 
 		# Verifica o número de arquivos em ${IODIR}
 		#if [[ $(ls ${IODIR}/*.fastq* | wc -l) -eq 1 ]]; then
