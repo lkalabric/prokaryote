@@ -180,13 +180,13 @@ function spades_bper () {
 		0) 
 			echo -e "Flag para controle de fluxo da montagem pelo Spades: $FLAG\n"
 			spades.py -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
-				--only-assembler --careful -o ${SPADESDIR}
+				--only-assembler --careful --isolate -o ${SPADESDIR}
 			;;
 		1) 
 			echo -e "Flag para controle de fluxo da montagem pelo Spades: $FLAG\n"
 			spades.py -1 ${IODIR}/*R1.fastq* -2 ${IODIR}/*R2.fastq* \
 				-s ${IODIR}/*R1R2u.fastq* \
-				--only-assembler --careful -o ${SPADESDIR}
+				--only-assembler --careful --isolate -o ${SPADESDIR}
 			;;
 		2)
 			echo -e "Flag para controle de fluxo da montagem pelo Spades: $FLAG\n"
