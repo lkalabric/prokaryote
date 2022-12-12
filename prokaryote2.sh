@@ -189,7 +189,7 @@ function spades_bper () {
 			;;
 		2)
 			spades.py -s ${IODIR}/*.fastq
-				--only-assembler --careful -o ${SPADESDIR}
+				--only-assembler --careful --isolate -o ${SPADESDIR}
 			;;
 		*)
 			if [[ $(ls ${IODIR}/*.fastq* | wc -l) -eq 2 ]]; then
