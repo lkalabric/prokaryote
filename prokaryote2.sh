@@ -181,7 +181,6 @@ function spades_bper () {
 		
 		# New
 		spades.py -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
-			-s ${IODIR}/*R1R2u.fastq* \
 			--only-assembler --careful -o ${SPADESDIR}
 		# Original 
 		# Verifica o número de arquivos em ${IODIR}
