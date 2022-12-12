@@ -22,7 +22,7 @@ fi
 RAWDIR="${HOME}/data/${LIBNAME}"
 if [[ ! -d $RAWDIR ]]; then
 	echo "Erro: Pasta de dados não encontrada!"
-	exit 2
+	exit 1
 fi
 IODIR=$RAWDIR
 REFSEQFILENAME="${HOME}/data/REFSEQ/Bper/NZ_CP025371.fasta"
@@ -246,7 +246,8 @@ function spades2_bper () {
 # wf2 - naive assembly with no filtering or correction
 # wf3 - method with filtering but without error correction
 # wf4 - method with filtering and error correction
-# wf5 - tests of parts of the script
+# wf5 - test flash
+# wf6 - test montagem contigs end-to-end
 
 # Define as etapas de cada workflow
 # Etapas obrigatórios: basecalling, demux/primer_removal ou demux_headcrop, reads_polishing e algum método de classificação taxonômica
@@ -278,4 +279,4 @@ for CALL_FUNC in ${STEPS[@]}; do
 	echo -e "\nExecutando o passo $CALL_FUNC... "
 	eval $CALL_FUNC
 done
-exit 4
+exit 7
