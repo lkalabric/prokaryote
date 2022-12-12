@@ -89,7 +89,7 @@ function trim_bper () {
 	source activate trimmomatic
 	if [[ ! -d $TRIMMOMATICDIR ]]; then
 		mkdir -vp $TRIMMOMATICDIR
-		# mkdir -vp $TEMPDIR
+		mkdir -vp $TEMPDIR
 		echo -e "Executando trimmomatic em ${IODIR}...\n"
 		# Executa o filtro de qualidade
 
