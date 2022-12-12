@@ -181,7 +181,7 @@ function spades_bper () {
 		# New
 		spades -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
 			-s ${IODIR}/*R1u.fastq* -2 ${IODIR}/*R2u.fastq*
-			--isolate --only-assembler --careful -o ${SPADESDIR}
+			--only-assembler --careful -o ${SPADESDIR}
 		# Original 
 		# Verifica o número de arquivos em ${IODIR}
 		#if [[ $(ls ${IODIR}/*.fastq* | wc -l) -eq 1 ]]; then
