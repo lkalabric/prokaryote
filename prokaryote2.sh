@@ -116,7 +116,7 @@ function musket_bper () {
 		# New code
 		musket -k ${KMER} 536870912 -p ${THREADS} \
 			${IODIR}/${LIBNAME}*.fastq \
-			-omulti ${MUSKETDIR}/${LIBNAME}* -inorder -lowercase
+			-omulti ${MUSKETDIR}/${LIBNAME} -inorder -lowercase
 		mv ${MUSKETDIR}/${LIBNAME}.0 ${MUSKETDIR}/${LIBNAME}_R1.fastq
 		mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R2.fastq
 		mv ${MUSKETDIR}/${LIBNAME}.2 ${MUSKETDIR}/${LIBNAME}_R1R2u.fastq
