@@ -52,7 +52,7 @@ else
 	read -p "Re-analisar os dados [S-apagar e re-analisa os dados / N-continuar as análises de onde pararam]? " -n 1 -r
 	if [[ $REPLY =~ ^[Ss]$ ]]; then
 	  # Reseta a pasta de resultados do worflow
-		echo "Apagando as pastas e re-iniciando as análises..."
+		echo -e "\nApagando as pastas e re-iniciando as análises..."
 		[[ ! -d "${RESULTSDIR}" ]] || mkdir -vp ${RESULTSDIR} && rm -r "${RESULTSDIR}"; mkdir -vp "${RESULTSDIR}"
 	fi
 fi
