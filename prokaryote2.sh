@@ -92,8 +92,6 @@ function trim_bper () {
 		mkdir -vp $TEMPDIR
 		echo -e "Executando trimmomatic em ${IODIR}...\n"
 		# Executa o filtro de qualidade
-
-		# New code
 		trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${LIBNAME}_trimlog.txt \
 					-summary ${TRIMMOMATICDIR}/${LIBNAME}_summary.txt \
 					${IODIR}/*.fastq* \
@@ -119,15 +117,16 @@ function musket_bper () {
 		musket -k ${KMER} 536870912 -p ${THREADS} \
 			${IODIR}/${LIBNAME}*.fastq \
 			-omulti ${MUSKETDIR}/${LIBNAME}* -inorder -lowercase
-		#mv ${MUSKETDIR}/${LIBNAME}.0 ${MUSKETDIR}/${LIBNAME}_R1.fastq
-		#mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R2.fastq
+		mv ${MUSKETDIR}/${LIBNAME}.0 ${MUSKETDIR}/${LIBNAME}_R1.fastq
+		mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R2.fastq
+		mv ${MUSKETDIR}/${LIBNAME}.2 ${MUSKETDIR}/${LIBNAME}_R1R2u.fastq
 		
-		# Original code
+		# Original code (somente paired-end data)
 		# musket -k ${KMER} 536870912 -p ${THREADS} \
 		#	${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
 		#	-omulti ${MUSKETDIR}/${LIBNAME} -inorder -lowercase
-		#mv ${MUSKETDIR}/${LIBNAME}.0 ${MUSKETDIR}/${LIBNAME}_R1.fastq
-		#mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R2.fastq
+		# mv ${MUSKETDIR}/${LIBNAME}.0 ${MUSKETDIR}/${LIBNAME}_R1.fastq
+		# mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R2.fastq
 	else		echo "Dados analisados previamente..."
 	fi
   	IODIR=$MUSKETDIR              
@@ -223,8 +222,8 @@ function spades2_bper () {
 
 # wf1 - full script
 # wf2 - naive assembly with no filtering or correction
-# wf3 - alternative method1
-# wf4 - alternative method2
+# wf3 - method with filtering but without error correction
+# wf4 - method with filtering and error correction
 # wf5 - tests of parts of the script
 
 # Define as etapas de cada workflow
@@ -233,9 +232,8 @@ WORKFLOWLIST=(
 	'qc_bper trim_bper musket_bper flash_bper khmer_bper spades_bper'
 	'spades_bper'
 	'trim_bper spades_bper'
-	'trim_bper musket_bper khmer_bper spades_bper'
 	'trim_bper musket_bper spades_bper'
-	'trim_bper musket_bper'
+	'trim_bper musket_bper khmer_bper spades_bper'
 )
 
 # Validação do WF
