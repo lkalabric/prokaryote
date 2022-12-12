@@ -177,14 +177,20 @@ function spades_bper () {
 	if [[ ! -d $SPADESDIR ]]; then
 		mkdir -vp $SPADESDIR
 		echo -e "Executando spades em ${IODIR}...\n"
+		
+		# New
+		spades -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
+			-s ${IODIR}/*R1u.fastq* -2 ${IODIR}/*R2u.fastq*
+			--isolate --only-assembler --careful -o ${SPADESDIR}
+		# Original 
 		# Verifica o número de arquivos em ${IODIR}
-		if [[ $(ls ${IODIR}/*.fastq* | wc -l) -eq 1 ]]; then
-			spades --12 ${IODIR}/${LIBNAME}.fastq \
-				--only-assembler --careful -o ${SPADESDIR}		
-		else
-			spades -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
-			--only-assembler --careful -o ${SPADESDIR}
-		fi
+		#if [[ $(ls ${IODIR}/*.fastq* | wc -l) -eq 1 ]]; then
+		#	spades --12 ${IODIR}/${LIBNAME}.fastq \
+		#		--only-assembler --careful -o ${SPADESDIR}		
+		#else
+		#	spades -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
+		#	--only-assembler --careful -o ${SPADESDIR}
+		#fi
 	else
 		echo "Dados analisados previamente..."
 	fi
@@ -227,6 +233,7 @@ function spades2_bper () {
 WORKFLOWLIST=(
 	'qc_bper trim_bper musket_bper flash_bper khmer_bper spades_bper'
 	'spades_bper'
+	'trim_bper spades_bper'
 	'trim_bper musket_bper khmer_bper spades_bper'
 	'trim_bper musket_bper spades_bper'
 	'trim_bper musket_bper'
