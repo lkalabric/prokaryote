@@ -97,18 +97,11 @@ function trim_bper () {
 		trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${LIBNAME}_trimlog.txt \
 					-summary ${TRIMMOMATICDIR}/${LIBNAME}_summary.txt \
 					${IODIR}/*.fastq* \
-					${TRIMMOMATICDIR}/${LIBNAME}_R1.fastq ${TRIMMOMATICDIR}/${LIBNAME}_R1u.fastq \
-					${TRIMMOMATICDIR}/${LIBNAME}_R2.fastq ${TRIMMOMATICDIR}/${LIBNAME}_R2u.fastq \
+					${TRIMMOMATICDIR}/${LIBNAME}_R1.fastq ${TEMPDIR}/${LIBNAME}_R1u.fastq \
+					${TRIMMOMATICDIR}/${LIBNAME}_R2.fastq ${TEMPDIR}/${LIBNAME}_R2u.fastq \
 					SLIDINGWINDOW:4:20 MINLEN:35
-		
-		cat ${TRIMMOMATICDIR}/${LIBNAME}_R1u.fastq ${TRIMMOMATICDIR}/${LIBNAME}_R2u.fastq > ${TRIMMOMATICDIR}/${LIBNAME}_R1R2u.fastq
-		# Original code
-		# trimmomatic PE -threads ${THREADS} -trimlog ${TRIMMOMATICDIR}/${LIBNAME}_trimlog.txt \
-		#			-summary ${TRIMMOMATICDIR}/${LIBNAME}_summary.txt \
-		#			${IODIR}/${FULLNAME[0]} ${IODIR}/${FULLNAME[1]} \
-		#			${TRIMMOMATICDIR}/${LIBNAME}_R1_p.fastq ${TRIMMOMATICDIR}/${LIBNAME}_R1_u.fastq \
-		#			${TRIMMOMATICDIR}/${LIBNAME}_R2_p.fastq ${TRIMMOMATICDIR}/${LIBNAME}_R2_u.fastq \
-		#			SLIDINGWINDOW:4:20 MINLEN:35
+		# Concatena as reads forward e reversar não pareadas para seguir como arquivo singled-end
+		cat ${TEMPDIR}/${LIBNAME}_R1u.fastq ${TEMPDIR}/${LIBNAME}_R2u.fastq > ${TRIMMOMATICDIR}/${LIBNAME}_R1R2u.fastq
 	else
 		echo "Dados analisados previamente..."
 	fi
@@ -180,9 +173,14 @@ function spades_bper () {
 		echo -e "Executando spades em ${IODIR}...\n"
 		
 		# New
-		spades.py -1 ${IODIR}/*R1.fastq* -2 ${IODIR}/*R2.fastq* \
-			-s ${IODIR}/*R1R2u.fastq* \
-			--only-assembler --careful -o ${SPADESDIR}
+		if [[ $(ls ${IODIR}/*.fastq | wc -l) -eq 2 ]]; then
+			spades.py -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
+				--only-assembler --careful -o ${SPADESDIR}
+		else
+			spades.py -1 ${IODIR}/*R1.fastq* -2 ${IODIR}/*R2.fastq* \
+				-s ${IODIR}/*R1R2u.fastq* \
+				--only-assembler --careful -o ${SPADESDIR}
+		fi
 		# Original 
 		# Verifica o número de arquivos em ${IODIR}
 		#if [[ $(ls ${IODIR}/*.fastq* | wc -l) -eq 1 ]]; then
