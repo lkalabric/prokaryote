@@ -173,7 +173,7 @@ function spades_bper () {
 		echo -e "Executando spades em ${IODIR}...\n"
 		
 		# New
-		if [[ $(ls ${IODIR}/*.fastq | wc -l) -eq 2 ]]; then
+		if [[ $(ls ${IODIR}/*.fastq* | wc -l) -eq 2 ]]; then
 			spades.py -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
 				--only-assembler --careful -o ${SPADESDIR}
 		else
