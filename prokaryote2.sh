@@ -256,6 +256,7 @@ WORKFLOWLIST=(
 	'trim_bper spades_bper'
 	'trim_bper musket_bper spades_bper'
 	'trim_bper musket_bper flash_bper spades_bper'
+	'spades_bper spades2_bper'
 )
 
 # Validação do WF
