@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # prokaryote.sh
-# Workflow de bioinformática para análise de B pertussis
+# Workflow de bioinformática para análise de Bordetella pertussis
 # Autor: Luciano Kalabric & Viviane Ferreira
 # Objetivo: Análise das sequencias, filtro de qualidade, correção das reads e montagem de novo
 # Controle de versão: Incluir o log das próximas atualizações aqui
@@ -28,14 +28,13 @@ IODIR=$RAWDIR
 REFSEQFILENAME="${HOME}/data/REFSEQ/Bper/NZ_CP025371.fasta"
 GENEFILEDIR="${HOME}/data/REFSEQ/Bper/GENE"
 
+# Validação dos dados
 # Lê o nome dos arquivos de entreda. O nome curto será o próprio nome da library
 INDEX=0
 for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename {} \; | sort); do
 	FULLNAME[$INDEX]=${FILE}
 	((INDEX++))
 done
-
-# Validação dos dados
 SAMPLENAME=$(echo $FULLNAME[0] | cut -d "E" -f 1)
 LIBSUFIX=$(echo $LIBNAME | cut -d "_" -f 2)
 if [[ $SAMPLENAME -ne $LIBSUFIX ]]; then
@@ -101,11 +100,11 @@ function trim_bper () {
 					SLIDINGWINDOW:4:20 MINLEN:35
 		# Concatena as reads forward e reversar não pareadas para seguir como arquivo singled-end
 		cat ${TEMPDIR}/${LIBNAME}_R1u.fastq ${TEMPDIR}/${LIBNAME}_R2u.fastq > ${TRIMMOMATICDIR}/${LIBNAME}_R1R2u.fastq
-		FLAG=1
 	else
 		echo "Dados analisados previamente..."
 	fi
-  	IODIR=$TRIMMOMATICDIR              
+  	FLAG=1
+	IODIR=$TRIMMOMATICDIR              
 }
 
 # Correção de erros
@@ -129,7 +128,8 @@ function musket_bper () {
 		#	-omulti ${MUSKETDIR}/${LIBNAME} -inorder -lowercase
 		# mv ${MUSKETDIR}/${LIBNAME}.0 ${MUSKETDIR}/${LIBNAME}_R1.fastq
 		# mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R2.fastq
-	else		echo "Dados analisados previamente..."
+	else		
+		echo "Dados analisados previamente..."
 	fi
   	IODIR=$MUSKETDIR              
 }
@@ -146,12 +146,11 @@ function flash_bper () {
 		mv ${FLASHDIR}/${LIBNAME}.notCombined_1.fastq ${FLASHDIR}/${LIBNAME}_R1nc.fastq
 		mv ${FLASHDIR}/${LIBNAME}.notCombined_2.fastq ${FLASHDIR}/${LIBNAME}_R2nc.fastq
 		cp ${MUSKETDIR}/${LIBNAME}_R1R2u.fastq ${FLASHDIR}/
-
-		FLAG=2
 	else
 		echo "Dados analisados previamente..."
 	fi
-  	IODIR=$FLASHDIR              
+  	FLAG=2
+	IODIR=$FLASHDIR              
 }
 
 # Normalização digital (remove a maioria das sequencias redundantes)
