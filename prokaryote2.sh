@@ -176,7 +176,7 @@ function spades_bper () {
 		echo -e "Executando spades em ${IODIR}...\n"
 		
 		# New
-		case FLAG in
+		case $FLAG in
 		0) 
 			echo -e "Flag para controle de fluxo da montagem pelo Spades: $FLAG\n"
 			spades.py -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
@@ -194,7 +194,8 @@ function spades_bper () {
 				--only-assembler --careful --isolate -o ${SPADESDIR}
 			;;
 		*)
-			echo -e "Parece que houve algo errado aqui! A flag atual é $FLAG\n" 
+			echo -e "Parece que houve algum erro e seus dados não foram montados!\n" 
+			exit 7
 			if [[ $(ls ${IODIR}/*.fastq* | wc -l) -eq 2 ]]; then
 				spades.py -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
 					--only-assembler --careful -o ${SPADESDIR}
