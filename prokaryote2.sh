@@ -229,7 +229,7 @@ function spades2_bper () {
 		mkdir -vp $SPADES2DIR
 		echo -e "\nExecutando spades para montagem as contigs end-to-end em ${IODIR}...\n"
 		# Verifica o número de arquivos em ${IODIR}
-		spades.py -s ${IODIR}/contigs.fastq \
+		spades.py -s ${IODIR}/contigs.fasta \
 				--only-assembler --careful -o ${SPADES2DIR}
 	else
 		echo "Dados analisados previamente..."
