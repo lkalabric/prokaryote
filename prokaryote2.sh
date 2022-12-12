@@ -177,6 +177,7 @@ function spades_bper () {
 		echo -e "Executando spades em ${IODIR}...\n"
 		
 		# New
+		echo -e "Flag para controle de fluxo da montagem pelo Spades: $FLAG\n"
 		case FLAG in
 		0) 
 			spades.py -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
