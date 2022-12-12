@@ -194,7 +194,7 @@ function spades_bper () {
 				--only-assembler --careful --isolate -o ${SPADESDIR}
 			;;
 		*)
-			echo -e "Parece que houve algo errado aqui!\n" 
+			echo -e "Parece que houve algo errado aqui! A flag atual é $FLAG\n" 
 			if [[ $(ls ${IODIR}/*.fastq* | wc -l) -eq 2 ]]; then
 				spades.py -1 ${IODIR}/*R1*.fastq* -2 ${IODIR}/*R2*.fastq* \
 					--only-assembler --careful -o ${SPADESDIR}
