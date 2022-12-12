@@ -191,7 +191,7 @@ function spades_bper () {
 		2)
 			echo -e "Flag para controle de fluxo da montagem pelo Spades: $FLAG\n"
 			spades.py -s ${IODIR}/*.fastq
-				--only-assembler --isolate -o ${SPADESDIR}
+				--only-assembler --careful -o ${SPADESDIR}
 			;;
 		*)
 			echo -e "Parece que houve algum erro e seus dados não foram montados!\n" 
