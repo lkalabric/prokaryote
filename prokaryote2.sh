@@ -118,9 +118,9 @@ function musket_bper () {
 			${IODIR}/${LIBNAME}*.fastq \
 			-omulti ${MUSKETDIR}/${LIBNAME} -inorder -lowercase
 		mv ${MUSKETDIR}/${LIBNAME}.0 ${MUSKETDIR}/${LIBNAME}_R1.fastq
-		mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R2.fastq
-		mv ${MUSKETDIR}/${LIBNAME}.2 ${MUSKETDIR}/${LIBNAME}_R1R2u.fastq
-		
+		mv ${MUSKETDIR}/${LIBNAME}.1 ${MUSKETDIR}/${LIBNAME}_R1R2u.fastq
+		mv ${MUSKETDIR}/${LIBNAME}.2 ${MUSKETDIR}/${LIBNAME}_R2.fastq
+				
 		# Original code (somente paired-end data)
 		# musket -k ${KMER} 536870912 -p ${THREADS} \
 		#	${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
