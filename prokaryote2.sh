@@ -140,11 +140,13 @@ function flash_bper () {
 	if [[ ! -d $FLASHDIR ]]; then
 		mkdir -vp $FLASHDIR
 		echo -e "Executando flash em ${IODIR}...\n"
-		flash ${IODIR}/${LIBNAME}R1.fastq ${IODIR}/${LIBNAME}R2.fastq \
+		flash ${IODIR}/${LIBNAME}_R1.fastq ${IODIR}/${LIBNAME}_R2.fastq \
 			-t ${THREADS} -o ${LIBNAME} -d ${FLASHDIR} 2>&1 | tee ${FLASHDIR}/${LIBNAME}_flash.log	
-		mv ${FLASHDIR}/${LIBNAME}.extendedFrags.fastq ${FLASHDIR}/${LIBNAME}R1R2e.fastq
-		mv ${FLASHDIR}/${LIBNAME}.notCombined_1.fastq ${FLASHDIR}/${LIBNAME}.R1nc.fastq
-		mv ${FLASHDIR}/${LIBNAME}.notCombined_2.fastq ${FLASHDIR}/${LIBNAME}.R2nc.fastq
+		mv ${FLASHDIR}/${LIBNAME}.extendedFrags.fastq ${FLASHDIR}/${LIBNAME}_R1R2e.fastq
+		mv ${FLASHDIR}/${LIBNAME}.notCombined_1.fastq ${FLASHDIR}/${LIBNAME}_R1nc.fastq
+		mv ${FLASHDIR}/${LIBNAME}.notCombined_2.fastq ${FLASHDIR}/${LIBNAME}_R2nc.fastq
+		cp ${MUSKETDIR}/${LIBNAME}_R1R2u.fastq ${FLASHDIR}/
+
 		FLAG=2
 	else
 		echo "Dados analisados previamente..."
@@ -253,6 +255,7 @@ WORKFLOWLIST=(
 	'spades_bper'
 	'trim_bper spades_bper'
 	'trim_bper musket_bper spades_bper'
+	'trim_bper musket_bper flash_bper spades_bper'
 	'trim_bper musket_bper khmer_bper spades_bper'
 )
 
