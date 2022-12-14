@@ -279,4 +279,8 @@ for CALL_FUNC in ${STEPS[@]}; do
 	echo -e "\nExecutando o passo $CALL_FUNC... "
 	eval $CALL_FUNC
 done
+
+# Gera o log das análises
+log_generator.sh ${LIBNAME} ${WF}
+
 exit 7
