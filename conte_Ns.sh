@@ -36,7 +36,7 @@ echo -e "$(grep -v ">" "${KHMERDIR}/${LIBNAME}.fasta" | wc -m)\n" >> "${LOGDIR}/
 
 # Conta o número de Ns
 echo "Total de Ns:" >> "${LOGDIR}/${LIBNAME}_report.log"
-echo -e "$(grep -c "N" "${KHMERDIR}/${LIBNAME}.fasta")\n" >> "${LOGDIR}/${LIBNAME}_report.log"
+echo -e "$(grep -v ">" "${KHMERDIR}/${LIBNAME}.fasta" | grep -c "N")\n" >> "${LOGDIR}/${LIBNAME}_report.log"
 
 # Dados do SPADES
 # Total de contigs
@@ -49,4 +49,4 @@ echo -e "$(grep -v ">" "${SPADESDIR}/contigs.fasta" | wc -m)\n" >> "${LOGDIR}/${
 
 # Conta o número de Ns
 echo "Total de Ns:" >> "${LOGDIR}/${LIBNAME}_report.log"
-echo -e "$(grep -c "N" "${SPADESDIR}/contigs.fasta")\n" >> "${LOGDIR}/${LIBNAME}_report.log"
+echo -e "$(grep -v ">" "${SPADESDIR}/contigs.fasta" | grep -c "N")\n" >> "${LOGDIR}/${LIBNAME}_report.log"
