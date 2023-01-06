@@ -10,12 +10,20 @@
 # Requirements: bbmap, fastqc, conda, trimmomatic, musket, flash, khmer, spades
 
 # Entrada de dados
-RESULTSDIR=ngs-library/
+LIBNAME=$1
+WF=$2
+if [[ $# -ne 2 ]]; then
+	echo "Erro: Faltou o nome da biblioteca ou número do worflow!"
+	echo "Sintáxe: ./prokaryote.sh <LIBRARY> <WF: 1, 2, 3,...>"
+	exit 0
+fi
 
-FILENAME=`echo "$1" | cut -d'.' -f1`
+RESULTSDIR=/media/brazil1/Seagate\ Expansion\ Drive/ngs-analysis/${LIBNAME}/wf${WF}/KHMER/
+
+# FILENAME=`echo "$1" | cut -d'.' -f1`
 
 # Converte fastq para fasta
-sed -n '1~4s/^@/>/p;2~4p' "${FILENAME}.fastq" > "${FILENAME}.fasta"
+sed -n '1~4s/^@/>/p;2~4p' "{$RESULTSDIR}/${LIBNAME}.fastq" > "{$RESULTSDIR}/${LIBNAME}.fasta"
 
 # Conta o número de Ns
-grep -c "N" "${FILENAME}.fasta"
+grep -c "N" "{$RESULTSDIR}/${LIBNAME}.fasta"
