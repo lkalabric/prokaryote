@@ -25,5 +25,14 @@ RESULTSDIR="/media/brazil1/Seagate Expansion Drive/ngs-analysis/${LIBNAME}/wf${W
 # Converte fastq para fasta
 sed -n '1~4s/^@/>/p;2~4p' "${RESULTSDIR}/${LIBNAME}.fastq" > "${RESULTSDIR}/${LIBNAME}.fasta"
 
+# Total de reads
+echo -e "Total de reads:\n"
+grep -c ">" "${RESULTSDIR}/${LIBNAME}.fasta"
+
+# Total de base
+echo -e "Total de bases:\n"
+grep -v ">" "${RESULTSDIR}/${LIBNAME}.fasta" > wc -m
+
 # Conta o número de Ns
+echo -e "Total de Ns:\n"
 grep -c "N" "${RESULTSDIR}/${LIBNAME}.fasta"
