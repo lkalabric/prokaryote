@@ -18,7 +18,7 @@ if [[ $# -ne 2 ]]; then
 	exit 0
 fi
 
-RESULTSDIR=/media/brazil1/Seagate\ Expansion\ Drive/ngs-analysis/${LIBNAME}/wf${WF}/KHMER/
+RESULTSDIR="/media/brazil1/Seagate\ Expansion\ Drive/ngs-analysis/${LIBNAME}/wf${WF}/KHMER/"
 
 # FILENAME=`echo "$1" | cut -d'.' -f1`
 
