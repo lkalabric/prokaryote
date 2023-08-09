@@ -19,7 +19,7 @@ if [[ $# -ne 2 ]]; then
     exit 0    
 fi
 
-if [ -d "${RAWDIR}" ]; then
+if [ ! -d "${RAWDIR}" ]; then
   echo "Library não existe!"
   exit 1
 fi
