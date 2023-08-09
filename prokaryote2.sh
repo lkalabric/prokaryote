@@ -30,6 +30,7 @@ GENEFILEDIR="${HOME}/data/REFSEQ/Bper/GENE"
 
 # Validação dos dados
 # Lê o nome dos arquivos de entreda. O nome curto será o próprio nome da library
+# Renomear os arquivos R1 e R2 para conter o prefixo LIBNAME_ (ex. Bper42_xxxx)
 INDEX=0
 for FILE in $(find ${IODIR} -mindepth 1 -type f -name *.fastq.gz -exec basename {} \; | sort); do
 	FULLNAME[$INDEX]=${FILE}
