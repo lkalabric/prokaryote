@@ -5,7 +5,7 @@
 # Autor: Luciano Kalabric & Viviane Ferreira
 # Objetivo: Análise das sequencias, filtro de qualidade, correção das reads e montagem de novo
 # Controle de versão: Incluir o log das próximas atualizações aqui
-# Versão 1.0 de 07 DEZ 2022 - Programa inicial revisado
+# Versão 2.0 de 09 AGO 2023 - Programa inicial revisado
 
 # Requirements: bbmap, fastqc, conda, trimmomatic, musket, flash, khmer, spades
 
