@@ -1,7 +1,25 @@
 #!/bin/bash
 
+# command name: log_generator.sh
+# author: Luciano Kalabric Silva
+# institution: Oswaldo Cruz Foundation, Goncalo Moniz Institute, Bahia, Brazil
+# last update: 09 AGO 2023
+# objetive: Gera uma contagem do número de reads em cada etapa do pipeline prokaryote2.sh
+# Syntax: ./log_generator.sh
+
+# Decalração de variáveis
 LIBNAME=$1
 WF=$2
+RAWDIR="${HOME}/data/${LIBNAME}"
+
+# Validating arguments
+if [[ $# -ne 2 ]]; then
+    echo "Illegal number of parameters"
+    echo "Syntax: log_generator.sh <LIBRARY> <WF: 1, 2, 3,...>"
+    exit 0    
+fi
+
+[ ! -d ${RAWDIR} ] || echo "Library não existe!"; exit 0;
 
 echo -e "Summary sequencing analysis of ${LIBNAME}\n" | tee "${HOME}/ngs-analysis/${LIBNAME}/wf${WF}/${LIBNAME}_report.log"
 echo -e "Total reads - $(zcat ${HOME}/data/${LIBNAME}/*.fastq.gz | grep -h -c "HHYF3BCX3")\n" | tee -a "${HOME}/ngs-analysis/${LIBNAME}/wf${WF}/${LIBNAME}_report.log"
