@@ -19,7 +19,10 @@ if [[ $# -ne 2 ]]; then
     exit 0    
 fi
 
-[ ! -d ${RAWDIR} ] || echo "Library não existe!"; exit 0;
+if [ -d ${RAWDIR} ]; then
+  echo "Library não existe!"
+  exit 1
+fi
 
 echo -e "Summary sequencing analysis of ${LIBNAME}\n" | tee "${HOME}/ngs-analysis/${LIBNAME}/wf${WF}/${LIBNAME}_report.log"
 echo -e "Total reads - $(zcat ${HOME}/data/${LIBNAME}/*.fastq.gz | grep -h -c "HHYF3BCX3")\n" | tee -a "${HOME}/ngs-analysis/${LIBNAME}/wf${WF}/${LIBNAME}_report.log"
